@@ -1,6 +1,6 @@
-from .app import create_app
+from .app import application
 
-app = create_app()
+
 
 
 @app.route('/status', methods=['GET'])
@@ -9,4 +9,4 @@ def status():
 
 
 if __name__ == '__main__':
-    app.run()
+    application.run()
