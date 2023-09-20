@@ -1,6 +1,6 @@
 
 from flask import request
-from flask_restx import Api, Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields
 
 
 netflix_api = Namespace(name='netflix', import_name='netflix')

@@ -1,12 +1,14 @@
 import requests from '../requests'
 import Banner from './Banner'
-import './HomeScreen.css'
+import './assets/styles/HomeScreen.css'
 import Nav from './Nav'
 import Row from './Row'
 
 function HomeScreen() {
   return (
-    <div className='homescreen'>
+    <div className='homescreen w-full h-full'>
+      
+      <title> Home - Netflix Clone </title>
         <Nav />
         
         <Banner />

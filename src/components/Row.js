@@ -1,6 +1,7 @@
 import axios from '../axios'
-import './Row.css'
+import './assets/styles/Row.css'
 import { useState, useEffect } from 'react'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 function Row({ title, fetchUrl, isLargeRow=false }) {
     const [movies, setMovies] = useState([])
@@ -11,6 +12,7 @@ function Row({ title, fetchUrl, isLargeRow=false }) {
             try{
                 const res = await axios.get(fetchUrl)
                 setMovies(res.data.results);
+                console.log(res)
                 return res
             }catch(error){
                 console.error(error)
@@ -26,13 +28,13 @@ function Row({ title, fetchUrl, isLargeRow=false }) {
             { movies.map((movie)=>{ return(
                 ((isLargeRow && movie.poster_path) || 
                     (!isLargeRow && movie.backdrop_path)) && (
-                        <img
-                    key={movie?.id}
-                    className={`row__poster ${isLargeRow && 'row__posterLarge' }`}
-                    src={`${baseurl}${
-                        isLargeRow ? movie?.poster_path : movie.backdrop_path
-                    }`}
-                    alt={movie?.name}
+                    <LazyLoadImage
+                        key={movie?.id}
+                        className={`row__poster ${isLargeRow && 'row__posterLarge' }`}
+                        src={`${baseurl}${
+                            isLargeRow ? movie?.poster_path : movie.backdrop_path
+                        }`}
+                        alt={movie?.name}
                     />
                     )
                 

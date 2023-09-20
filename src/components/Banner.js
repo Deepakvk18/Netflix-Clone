@@ -1,4 +1,4 @@
-import './Banner.css'
+import './assets/styles/Banner.css'
 import axios from '../axios'
 import requests from '../requests'
 import { useState, useEffect } from 'react'
