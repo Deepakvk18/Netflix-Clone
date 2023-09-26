@@ -13,6 +13,7 @@ class BaseConfig(object):
     APP_NAME = environ.get('APP_NAME') or 'netflix-clone'
     ORIGINS = ['*']
     EMAIL_CHARSET = 'UTF-8'
+    SECRET_KEY = environ.get('SECRET_KEY')
     API_KEY = environ.get('API_KEY')
     BROKER_URL = environ.get('BROKER_URL')
     RESULT_BACKEND = environ.get('RESULT_BACKEND')
@@ -69,6 +70,7 @@ class Development(BaseConfig):
 
     DEBUG = True
     ENV = 'dev'
+    SQLALCHEMY_DATABASE_URI = f"mysql://{environ.get('DB_USERNAME')}:{environ.get('DB_PASSWORD')}@localhost:3306/netflix"
 
 
 class Staging(BaseConfig):

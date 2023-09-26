@@ -7,25 +7,26 @@ import {
   Route,
 } from 'react-router-dom'
 import LoginScreen from './components/LoginScreen';
+import SignInScreen from './components/SignInScreen';
 
 function App() {
 
-  const user = null;
+  const user = {};
 
   return (
     <div className="app w-full h-full">
       
       <Router>
 
-        { !user ? 
-          <LoginScreen /> :(
+        {/* { !user ? 
+          <LoginScreen /> :( */}
           <Routes>
-
-
-            <Route exact path='/' element={<HomeScreen />} />
+            <Route exact path='/' element={<LoginScreen />} />
+            <Route exact path='/login' element={<SignInScreen />} />
+            <Route exact path='/browse' element={<HomeScreen />} />
           </Routes>
       
-        ) }
+        {/* ) } */}
         
         </Router>
     </div>

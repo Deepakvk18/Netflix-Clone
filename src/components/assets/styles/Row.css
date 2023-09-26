@@ -24,7 +24,7 @@
 
 .row__poster:hover {
     opacity: 1;
-    transform: scale(1.25);
+    transform: scale(1.25 );
 }
 
 .row__posterLarge {

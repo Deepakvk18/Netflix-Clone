@@ -1,9 +1,7 @@
+from . import netflix_api
 
 from flask import request
 from flask_restx import Namespace, Resource, fields
-
-
-netflix_api = Namespace(name='netflix', import_name='netflix')
 
 example_model = netflix_api.model('ExampleModel', {
     'message': fields.String(description='A message field in the response.', required=True, message='aksndasf')
@@ -27,5 +25,4 @@ class Shows(Resource):
         """Get a list of TV shows"""
         # Your code to fetch TV shows goes here
         example: example_model = request.get_json()
-        
         return example
