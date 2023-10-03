@@ -2,7 +2,7 @@ import json
 from requests.exceptions import HTTPError
 
 import logging
-from flask import request
+from flask import request, make_response, jsonify
 from flask_restx import Resource
 
 from ..services.authentication import FireBaseAuth
@@ -10,65 +10,51 @@ from ..schemas.auth_schema import (sign_in_model,
                                 sign_in_output,
                                 validate_output,
                                 refresh_output,
-                                delete_output)
+                                message_output)
+from ..models.user_models import User
 from . import auth_api
 from ..exceptions.custom_exceptions import AuthException
-from ..models.auth_models import Session
 from ..extensions import db
-
-firebase = FireBaseAuth()
-
-# @auth_api.errorhandler(HTTPError)
-# def http_errorhandler(error):
-#     logging.error(error.args[0])
-#     err = json.loads(error.args[1]).get('error')
-#     logging.error(err)
-#     return {'message': err.get('message'), 'description': str(error.args[0])}, err.get('code')
-
-# @auth_api.errorhandler(Exception)
-# def errors(error):
-#     logging.error(error)
-#     return { 'message': f'{error}', }, 400
+from ..services.authentication import firebase
+from .. import constants
 
 @auth_api.route('/signup')
 class SignUp(Resource):
 
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error'})
     @auth_api.expect(sign_in_model)
-    @auth_api.marshal_with(sign_in_output)
+    # @auth_api.marshal_with(sign_in_output)
     def post(self):
         """Sign up for the Application using email and password"""
         # Your code to fetch movies goes here
         sign_up = auth_api.payload
         signed_in = firebase.signup(sign_up.get('email'), sign_up.get('password'))
         refresh = signed_in.get('refreshToken')
-        session = Session.query.filter_by(email=sign_up.get('email')).first()
-        if not session:
-            session = Session(email=sign_up.get('email'), refresh_token=refresh)
-            db.session.add(session)
-        session.refresh_token = refresh
+        user = User.query.filter_by(email=sign_up.get('email')).first()
+        user.uuid = signed_in.get('localId')
         db.session.commit()
-        return signed_in
+        return (signed_in)
 
 @auth_api.route('/signin')
 class LogIn(Resource):
 
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error'})
     @auth_api.expect(sign_in_model)
-    @auth_api.marshal_with(sign_in_output)
+    # @auth_api.marshal_with(sign_in_output)
     def post(self):
         """Sign in to the Application using email and password"""
         # Your code to fetch movies goes here
         sign_in = auth_api.payload
         signed_in = firebase.login(sign_in.get('email'), sign_in.get('password'))
         refresh = signed_in.get('refreshToken')
-        session = Session.query.filter_by(email=sign_in.get('email')).first()
-        if not session:
-            session = Session(email=sign_in.get('email'), refresh_token=refresh)
-            db.session.add(session)
-        session.refresh_token = refresh
         db.session.commit()
-        return signed_in
+        id_token = signed_in.get('idToken')
+        refresh = signed_in.get('refreshToken')
+        signed_in = make_response(signed_in)
+        signed_in.headers['Access-Control-Allow-Credentials'] = True
+        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3000)
+        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=3600)
+        return (signed_in)
 
 @auth_api.route('/verifyIdentity')
 class Identity(Resource):
@@ -79,9 +65,8 @@ class Identity(Resource):
     @auth_api.marshal_with(validate_output)
     def get(self):
         """Get the identity of the user given the token id"""
-        token = FireBaseAuth.get_token()
-        email = firebase.validate(token).get('users')[0].get('email')
-        return {'email': email, 'valid': 'true'}
+        user = firebase.get_user()
+        return {'email': user.get('email'),'localId': user.get('localId') , 'valid': 'true'}
 
 @auth_api.route('/refresh')
 class Refresh(Resource):
@@ -92,26 +77,27 @@ class Refresh(Resource):
     @auth_api.marshal_with(refresh_output)
     def get(self):
         """Get the new access token of the user given a refresh token"""
-        token = FireBaseAuth.get_token()
-        email = firebase.validate(token).get('users')[0].get('email')
-        session = Session.query.filter_by(email=email).first()
-        if not session or not session.refresh_token:
-            raise AuthException(message='NO_VALID_TOKEN')
-        new_info = firebase.refresh(session.refresh_token)
-        session.refresh_token = new_info.get('refreshToken')
-        db.session.commit()
-        return {'email': email, 'idToken': new_info.get('idToken')}
+        info = firebase.get_user()
+        new_info = firebase.refresh()
+        return {'email': info.get('email'), 'idToken': new_info.get('idToken'), 'localId': info.get('localId'), 'refreshToken': new_info.get('refreshToken')}
 
-@auth_api.route('/delete')
-class Delete(Resource):
-    
+@auth_api.route('/logout')
+class Logout(Resource):
+
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
     @auth_api.doc(security='jsonWebToken')
     @firebase.jwt_required
-    @auth_api.marshal_with(delete_output)
+    # @auth_api.marshal_with(message_output)
     def delete(self):
-        """Delete the user with the id token"""
-        token = FireBaseAuth.get_token()
-        firebase.delete(token)
-        return {'message': 'User Deleted Successfully!!'}
+        """Destroys Refresh token & Acces token from cookies once the user is logged out"""
+
+        # Destroy both the refresh token and accesss token once the user is logged out
+
+
+        response = make_response(jsonify({'message': 'User Logged out Successfully'}))
+        response.set_cookie('access_token', '', expires=0, httponly=True)
+        response.set_cookie('refresh_token', '', expires=0, httponly=True)
+        return response
+
+
         

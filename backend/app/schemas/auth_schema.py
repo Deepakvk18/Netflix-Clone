@@ -11,22 +11,22 @@ sign_in_output = auth_api.model('Sign In Output', model={
     "email": fields.String(description="Email of the user", required=True),
     "idToken": fields.String(description="Token ID of the user", required=True),
     "expiresIn": fields.Integer(description="Expiry time of the token", required=True),
+     'localId': fields.String(description='User UID', required=True)
 })
 
 validate_output = auth_api.model('Validate Token Output', model={
     'valid': fields.Boolean(required=True, description="Whether or not the token is associated with a valid user"),
-    'email': fields.String(description='Email ID of the respective user', required=True)
+    'email': fields.String(description='Email ID of the respective user', required=True),
+    'localId': fields.String(description='User UID', required=True)
 })
 
 refresh_output = auth_api.model('Validate Token Output', model={
     'email': fields.String(description='Email ID of the respective user', required=True),
     "idToken": fields.String(description="Token ID of the user", required=True),
+    "refreshToken": fields.String(description="Refresh Token of the user", required=True),
+     'localId': fields.String(description='User UID', required=True)
 })
 
-delete_output = auth_api.model('Delete user Output', model={
-    'message': fields.String(description='Success Message of the delete method', required=True)
-})
-
-email_input = auth_api.model('Delete user Output', model={
-    'email': fields.String(description='Email ID of the user', required=True),
+message_output = auth_api.model('Logout Output', model={
+    'message': fields.String(description='Success Message', required=True),
 })

@@ -23,6 +23,11 @@ function LoginScreen() {
         }
         setEmailError('')
          // API Call
+         try{
+            
+         } catch(error){
+
+         }
 
     }
 

@@ -1,44 +1,34 @@
-import axios from '../axios'
-import './assets/styles/Row.css'
-import { useState, useEffect } from 'react'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { useGetMoviesQuery } from '../features/moviesApi'
+import MovieCard from './MovieCard';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
+
 
 function Row({ title, fetchUrl, isLargeRow=false }) {
-    const [movies, setMovies] = useState([])
-    const baseurl = 'https://image.tmdb.org/t/p/original/'
 
-    useEffect(()=>{
-        async function fetchData(){
-            try{
-                const res = await axios.get(fetchUrl)
-                setMovies(res.data.results);
-                console.log(res)
-                return res
-            }catch(error){
-                console.error(error)
-            }
-        }
-        fetchData()
-    }, [fetchUrl])
+    const  { data, isLoading, isError, error } = useGetMoviesQuery(fetchUrl);
+    
 
+    const movies = data?.results
+
+    if(isLoading) return <div>Loading...</div>
+    if(isError) return <div>{error}</div>
+    
   return (
-    <div className="row">
-        <h2>{ title }</h2>
-        <div className="row__posters">
-            { movies.map((movie)=>{ return(
-                ((isLargeRow && movie.poster_path) || 
-                    (!isLargeRow && movie.backdrop_path)) && (
-                    <LazyLoadImage
-                        key={movie?.id}
-                        className={`row__poster ${isLargeRow && 'row__posterLarge' }`}
-                        src={`${baseurl}${
-                            isLargeRow ? movie?.poster_path : movie.backdrop_path
-                        }`}
-                        alt={movie?.name}
-                    />
-                    )
-                
-            )}) }
+    <div className="text-white ml-10 mt-5 group/outer">
+        <a href={`/${title}`} className='h-2 flex items-center'>
+            <h2 className='text-lg left-0 ml-1 font-semibold items-center inline-block'>
+                { title } 
+                <a className='ml-4 text-sm hidden group-hover/outer:inline-block text-slate-400' href={`/${title}`}>
+                    Explore More 
+                    <FontAwesomeIcon icon={faChevronRight} height={'30px'} width={'30px'} /> 
+                </a>
+            </h2>
+        </a>
+        <div className="flex overflow-x-scroll w-full scrollbar-hide">
+            { movies.map((movie)=>(
+                    <MovieCard key={movie?.id} movie={movie} isLargeRow={isLargeRow} />
+            )) }
         </div>
     </div>
   )

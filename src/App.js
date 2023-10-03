@@ -1,34 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import HomeScreen from './components/HomeScreen';
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
 } from 'react-router-dom'
 import LoginScreen from './components/LoginScreen';
 import SignInScreen from './components/SignInScreen';
+import ProtectedRoute from './components/ProtectedRoute';
+import { Account } from './components/Account';
 
 function App() {
 
-  const user = {};
+  if (localStorage.getItem('userId')) {
+    new Promise((resolve) => setTimeout(resolve, 1000));
+  }
 
   return (
     <div className="app w-full h-full">
-      
-      <Router>
-
-        {/* { !user ? 
-          <LoginScreen /> :( */}
           <Routes>
             <Route exact path='/' element={<LoginScreen />} />
             <Route exact path='/login' element={<SignInScreen />} />
-            <Route exact path='/browse' element={<HomeScreen />} />
+            <Route element={<ProtectedRoute />} >
+              <Route exact path='/browse' element={<HomeScreen />} />
+              <Route exact path='/account' element={<Account />} />
+            </Route>
           </Routes>
-      
-        {/* ) } */}
-        
-        </Router>
     </div>
   );
 }

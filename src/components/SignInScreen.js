@@ -8,6 +8,8 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'
 import './assets/styles/LoginScreen.css'
 import axios from 'axios'
 import {backend} from '../utils/baseUrl'
+import { useDispatch } from 'react-redux'
+import { login } from '../features/userSlice'
 
 function SignInScreen() {
 
@@ -18,6 +20,7 @@ function SignInScreen() {
     const [checked, setChecked] = useState(false)
     const [backendError, setBackendError] = useState("")
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const onSubmit = async (e)=>{
             e.preventDefault()
@@ -33,7 +36,11 @@ function SignInScreen() {
             setEmailError('')
             setPassError('')
             try{
-                const res = await axios.post(backend + 'auth/signin', { email: email, password: password })
+                const res = await axios.post(backend + '/auth/signin', { email: email, password: password })
+                dispatch(login(res.data))
+                localStorage.setItem('user', res.data)
+                console.log(localStorage.getItem('user'))
+                console.log(res.data);
                 navigate('/browse')
             } catch (error){
                 setBackendError(error.response ? error.response.data.message: error.message)
@@ -53,7 +60,7 @@ function SignInScreen() {
         if(!isValidPassword(password) && password) setTimeout(validateFields, 3000)
         else setPassError('')
 
-      }, [emailError, email, password, passError])
+      }, [emailError, email, password, passError, validateFields])
 
   return (
     <div className='loginScreen flex justify-center items-center'>
@@ -94,7 +101,7 @@ function SignInScreen() {
                         </div>
                         <div>
                             { emailError && (<span className='text-errorText mt-4 pt-4 text-sm text-left text-semibold'>
-                            <FontAwesomeIcon icon={faTriangleExclamation} width={'30px'} beatFade size="md" style={{color: "#E87C03",}} />
+                            <FontAwesomeIcon icon={faTriangleExclamation} width={'30px'} beatFade size="sm" style={{color: "#E87C03",}} />
                                 { ' ' + emailError }
                                 
                             </span>) }
@@ -115,7 +122,7 @@ function SignInScreen() {
                         </div>
                         <div>
                             { passError && (<span className='text-errorText text-sm mt-4 pt-4 text-left text-semibold'>
-                            <FontAwesomeIcon icon={faTriangleExclamation} width={'30px'} beatFade size="md" style={{color: "#E87C03",}} />
+                            <FontAwesomeIcon icon={faTriangleExclamation} width={'30px'} beatFade size="sm" style={{color: "#E87C03",}} />
                                 { ' ' + passError }
                                 
                             </span>) }

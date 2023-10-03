@@ -7,7 +7,6 @@ from requests.exceptions import HTTPError
 import logging
 
 from ..exceptions.custom_exceptions import AuthException
-from ..models.auth_models import Session
 from ..extensions import db
 
 class FireBaseAuth:
@@ -31,14 +30,14 @@ class FireBaseAuth:
     def validate(self, token):
         return self.auth.get_account_info(token)
 
-    def refresh(self, token):
-        return self.auth.refresh(refresh_token=token)
+    def refresh(self):
+        return self.auth.refresh(refresh_token=self.get_refresh_token())
 
     def signup(self, email, password):
         return self.auth.create_user_with_email_and_password(email, password)
 
     def delete(self, token):
-        return self.auth.delete_user_account(token)
+        return self.auth.delete_user_account(self.get_token())
 
     def send_verification(self, token):
         return self.auth.send_email_verification(token)
@@ -52,6 +51,7 @@ class FireBaseAuth:
         def wrapper(*args, **kwargs):
 
             jwt = self.get_token()
+            print(jwt)
             self.validate(jwt)
             return api_func(*args, **kwargs)
 
@@ -59,10 +59,24 @@ class FireBaseAuth:
 
     @staticmethod
     def get_token():
-        try:
-            jwt = request.headers.get('Authorization').split()[1]
-            return jwt
-        except Exception as e:
-            logging.error(e)
-            raise AuthException(message='NO_TOKEN')
+        jwt = request.cookies.get('access_token')
+        if not jwt:
+            raise AuthException(message='NO_TOKEN_FOUND')
+        return jwt
+
+    @staticmethod
+    def get_refresh_token():
+        refresh = request.cookies.get('refresh_token')
+        if not refresh:
+            raise AuthException(message='NO_REFRESH_TOKEN_FOUND')
+        return refresh
+    
+    def get_user(self):
+        jwt = self.get_token()
+        valid = self.validate(jwt)
+        return {'email': valid.get('users')[0].get('email'), 'localId': valid.get('users')[0].get('localId')}
+    
+
+
+firebase = FireBaseAuth()
     

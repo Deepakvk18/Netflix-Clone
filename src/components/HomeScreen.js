@@ -1,22 +1,21 @@
 import requests from '../requests'
 import Banner from './Banner'
-import './assets/styles/HomeScreen.css'
 import Nav from './Nav'
 import Row from './Row'
 
 function HomeScreen() {
   return (
-    <div className='homescreen w-full h-full'>
+    <div className=''>
       
       <title> Home - Netflix Clone </title>
-        <Nav />
+
+        <Nav links />
         
         <Banner />
         
         <Row
           title='NETFLIX ORIGINALS'
           fetchUrl={requests.fetchNetflixOriginals}
-          isLargeRow
         />
 
         <Row
@@ -37,7 +36,6 @@ function HomeScreen() {
         <Row
           title='Comedy Movies'
           fetchUrl={requests.fetchComedyMovies}
-          isLargeRow
         />
 
         <Row

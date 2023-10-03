@@ -13,9 +13,9 @@ from .config import config as app_config
 from .controller.netflix import netflix_api
 from .controller.auth import auth_api
 from .controller.users import user_api
-from .extensions import (jwt,
-                        db)
-from .exceptions.custom_exceptions import (NetflixException)
+from .controller.profiles import profile_api
+from .extensions import (db)
+from .exceptions.custom_exceptions import (NetflixException, AuthException)
 from .utils.messages import msg
 
 celery = Celery(__name__)
@@ -28,8 +28,7 @@ def create_app():
     app = Flask(app_config[APPLICATION_ENV].APP_NAME)
     app.config.from_object(app_config[APPLICATION_ENV])
 
-    CORS(app, resources={r'*': {'origins': '*'}})
-    jwt.init_app(app)
+    CORS(app, resources={r'*': {'origins': '*'}}, support_credentials=True)
     db.init_app(app)
 
     with app.app_context():
@@ -52,19 +51,31 @@ def register_blueprint(app):
     api.add_namespace(netflix_api)
     api.add_namespace(auth_api)
     api.add_namespace(user_api)
+    api.add_namespace(profile_api)
 
     @api.errorhandler(HTTPError)
     def http_errorhandler(error):
         logging.error(error.args[0])
         err = json.loads(error.args[1]).get('error')
         logging.error(err)
-        return {'message': err.get('message'), 'description': str(error.args[0]), 'status': err.get('code')}
-
-    @api.errorhandler(NetflixException)
-    def errors(error):
+        return {'message': err.get('message'), 'description': str(error.args[0]), 'status': err.get('code')}, err.get('code')
+    
+    @api.errorhandler(AuthException)
+    def auth_exception(error):
         logging.error(error)
         desc = msg.get(error.message) if msg.get(error.message) else error.message
-        return { 'message': error.message, 'status': 400, 'description': desc}
+        return { 'message': error.message, 'status': 403, 'description': desc}, 403
+
+    @api.errorhandler(NetflixException)
+    def netflix_exception(error):
+        logging.error(error)
+        desc = msg.get(error.message) if msg.get(error.message) else error.message
+        return { 'message': error.message, 'status': 400, 'description': desc}, 400
+
+    @api.errorhandler(Exception)
+    def general_exception(error):
+        logging.error(error)
+        return { 'message': str(error), 'status': 400, 'description': 'Some Error Occured'}, 500
     
 
 application = create_app()

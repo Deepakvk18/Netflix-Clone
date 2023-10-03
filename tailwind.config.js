@@ -12,7 +12,8 @@ module.exports = {
         inputBg: '#333333',
         inputPH: '#8C8C8C',
         errorText: '#E87C03',
-        loginFormText: '#737373'
+        loginFormText: '#737373',
+        buttonBg: '#6D6D6EB3',
       },
     },
   },
