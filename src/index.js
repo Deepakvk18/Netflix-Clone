@@ -6,6 +6,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
+import {Elements} from '@stripe/react-stripe-js';
+
 
 const container = document.getElementById('root');
 const root = createRoot(container);

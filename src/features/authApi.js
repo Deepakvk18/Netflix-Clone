@@ -7,7 +7,7 @@ export const authApi = apiSlice.injectEndpoints({
             query: (url) => ({ url: url })
         }),
         logout: builder.query({
-
+            
         }),
         refresh: builder.query({
             query: ()=> ({ 

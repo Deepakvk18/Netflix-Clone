@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Banner() {
 
-  const { data: movies, isLoading, isError, error } = useGetMoviesQuery(requests.fetchNetflixOriginals)
+  const { data: movies, isLoading, isError, error } = useGetMoviesQuery('fetchNetflixOriginals')
   const movie = (movies?.results[
     Math.floor(Math.random() * movies.results.length -1)
   ])
@@ -22,20 +22,22 @@ export default function Banner() {
 
 
   return (
-    <header className='relative rounded-lg to-black h-[80vh] text-white object-contain flex justify-start mb-4' style={{
+    <header className='relative rounded-lg to-black h-[90vh] text-white object-contain flex justify-start mb-4' style={{
         backgroundSize: 'cover',
         backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie?.backdrop_path})`,
         backgroundPosition: 'center'
     }}>
         <div className='block'>
           <div className='pt-44 ml-11 h-14 w-[45%]'>
-              <h1 className="text-4xl font-bold ml-0 mb-5">
-                { movie?.title || movie?.name || movie?.original_name }
-              </h1>
-              <h1 className="text-white text-md line-clamp-3 mt-4 mb-5">
-              {movie?.overview}
-              </h1>
-              <div className="banner__buttons">
+              <div className='mt-8'>
+                <h1 className="text-8xl font-bold ml-0 mb-5">
+                  { movie?.title || movie?.name || movie?.original_name }
+                </h1>
+                <h1 className="text-white text-lg line-clamp-3 mt-4 mb-5">
+                {movie?.overview}
+                </h1>
+              </div>
+              <div>
                 <button className='cursor-pointer font-semibold border-radius-[0.2vw] px-6 mr-4 py-2 rounded-md bg-slate-100 opacity-90 text-black text-lg hover:bg-gray-300'>
                   <FontAwesomeIcon className='mr-2' icon={faPlay} /> Play
                 </button>
@@ -46,7 +48,7 @@ export default function Banner() {
                 </button>
               </div>
           </div>
-          <div className="bg-gradient-to-b w-[99.4vw] z-10 from-transparent to-[#111] h-[400px] float-left" />  
+          <div className="bg-gradient-to-b w-[99.4vw] z-10 from-transparent to-[#111] h-[500px] float-left" />  
         </div>
        
     </header>

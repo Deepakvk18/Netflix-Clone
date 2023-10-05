@@ -6,10 +6,14 @@ import {
   Route,
   useNavigate,
 } from 'react-router-dom'
-import LoginScreen from './components/LoginScreen';
+import LoginScreen from './components/SignUpScreen';
 import SignInScreen from './components/SignInScreen';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Account } from './components/Account';
+import { Checkout } from './components/Checkout';
+import PasswordScreen from './components/PasswordScreen';
+import Plans from './components/Plans';
+import Payment from './components/Payment';
 
 function App() {
 
@@ -22,9 +26,17 @@ function App() {
           <Routes>
             <Route exact path='/' element={<LoginScreen />} />
             <Route exact path='/login' element={<SignInScreen />} />
+            <Route exact path='/signUp'  >
+              <Route path='/signUp' element={<PasswordScreen />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path='/signUp/plans' element={<Plans />} />
+                <Route path='/signUp/payment' element={<Payment />} />
+              </Route>
+            </Route>
             <Route element={<ProtectedRoute />} >
               <Route exact path='/browse' element={<HomeScreen />} />
               <Route exact path='/account' element={<Account />} />
+              <Route exact path='/checkout' element={<Checkout />} />
             </Route>
           </Routes>
     </div>

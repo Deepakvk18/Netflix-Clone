@@ -10,6 +10,7 @@ import axios from 'axios'
 import {backend} from '../utils/baseUrl'
 import { useDispatch } from 'react-redux'
 import { login } from '../features/userSlice'
+import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 
 function SignInScreen() {
 
@@ -67,9 +68,10 @@ function SignInScreen() {
         <title> Sign In - Netflix Clone </title>
         <div className="loginscreen__background">
             <LazyLoadImage
-                src='https://logos-world.net/wp-content/uploads/2020/04/Netflix-Logo.png'
+                src={netflixLogo}
                 className='loginscreen__logo cursor-pointer'
                 onClick={()=>navigate('/')}
+                width={200}
             />
             <div className='loginScreen__gradient' />
         </div>

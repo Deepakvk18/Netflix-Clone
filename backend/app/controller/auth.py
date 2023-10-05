@@ -33,6 +33,10 @@ class SignUp(Resource):
         user = User.query.filter_by(email=sign_up.get('email')).first()
         user.uuid = signed_in.get('localId')
         db.session.commit()
+        signed_in = make_response(signed_in)
+        signed_in.headers['Access-Control-Allow-Credentials'] = True
+        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
+        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
         return (signed_in)
 
 @auth_api.route('/signin')
@@ -52,8 +56,8 @@ class LogIn(Resource):
         refresh = signed_in.get('refreshToken')
         signed_in = make_response(signed_in)
         signed_in.headers['Access-Control-Allow-Credentials'] = True
-        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3000)
-        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=3600)
+        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
+        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
         return (signed_in)
 
 @auth_api.route('/verifyIdentity')

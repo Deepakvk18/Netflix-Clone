@@ -15,3 +15,5 @@ netflix_api = Namespace(name='netflix', import_name='netflix')
 user_api = Namespace(name='users', import_name='users', authorizations=authorizations)
 
 profile_api = Namespace(name='profile', import_name='profile', authorizations=authorizations)
+
+payments_api = Namespace(name='payments', import_name='payments', authorizations=authorizations)

@@ -1,11 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { apiSlice } from './apiSlice'
 
-export const moviesApi = createApi({
-    reducerPath: 'movies',
-    baseQuery: fetchBaseQuery({ baseUrl: 'https://api.themoviedb.org/3' }),
+export const moviesApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMovies: builder.query({
-            query: (url) => ({ url: url })
+            query: (query) => (`netflix/shows/${query}`)
         }),
     })
 })

@@ -14,6 +14,7 @@ from .controller.netflix import netflix_api
 from .controller.auth import auth_api
 from .controller.users import user_api
 from .controller.profiles import profile_api
+from .controller.payments import payments_api
 from .extensions import (db)
 from .exceptions.custom_exceptions import (NetflixException, AuthException)
 from .utils.messages import msg
@@ -52,6 +53,7 @@ def register_blueprint(app):
     api.add_namespace(auth_api)
     api.add_namespace(user_api)
     api.add_namespace(profile_api)
+    api.add_namespace(payments_api)
 
     @api.errorhandler(HTTPError)
     def http_errorhandler(error):

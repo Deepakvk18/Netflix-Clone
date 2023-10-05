@@ -6,8 +6,9 @@ import { faTriangleExclamation, faChevronRight } from '@fortawesome/free-solid-s
 import { isValidEmail } from '../utils/validator'
 import messages from '../utils/messages'
 import { useNavigate } from 'react-router-dom'
+import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 
-function LoginScreen() {
+function SignUpScreen() {
 
     const [emailError, setEmailError] = useState('')
     const [email, setEmail] = useState('')
@@ -44,7 +45,7 @@ function LoginScreen() {
         <title> Sign Up - Netflix Clone </title>
         <div className="loginscreen__background">
             <LazyLoadImage
-                src='https://logos-world.net/wp-content/uploads/2020/04/Netflix-Logo.png'
+                src={netflixLogo}
                 className='loginscreen__logo'
                 onClick={()=>navigate('/')}
             />
@@ -73,7 +74,7 @@ function LoginScreen() {
                             <div>
                                 <input 
                                     type="text" 
-                                    className={`email__input h-14 w-96 p-4 pb-2.5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'}`}
+                                    className={`email__input h-14 w-96 p-4 pb-2.5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
                                     placeholder=" "
                                     value={email}
                                     onChange={(e)=>setEmail((prev)=>e.target.value)}
@@ -109,4 +110,4 @@ function LoginScreen() {
   )
 }
 
-export default LoginScreen
+export default SignUpScreen

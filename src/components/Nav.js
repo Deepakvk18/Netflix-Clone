@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
+import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 
 function Nav({ links }) {
 
@@ -32,11 +33,11 @@ function Nav({ links }) {
     }
 
   return (
-    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111]'}`}>
+    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'}`}>
         <div className='flex space-between items-center'>
             <img
                 className='object-contain cursor-pointer ml-10 mr-5'
-                src='https://logos-world.net/wp-content/uploads/2020/04/Netflix-Logo.png'
+                src={netflixLogo}
                 alt='logo'
                 width={100}
             />

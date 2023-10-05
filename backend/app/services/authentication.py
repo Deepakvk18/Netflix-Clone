@@ -75,6 +75,8 @@ class FireBaseAuth:
         jwt = self.get_token()
         valid = self.validate(jwt)
         return {'email': valid.get('users')[0].get('email'), 'localId': valid.get('users')[0].get('localId')}
+
+    
     
 
 
