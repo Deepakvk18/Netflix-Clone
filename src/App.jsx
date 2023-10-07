@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './App.css';
+import './index.css';
 import HomeScreen from './components/HomeScreen';
 import {
   Routes,

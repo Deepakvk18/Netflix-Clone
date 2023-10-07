@@ -1,4 +1,3 @@
-import requests from '../requests'
 import { useGetMoviesQuery } from '../features/moviesApi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay } from '@fortawesome/free-solid-svg-icons'
