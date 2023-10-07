@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 
-function Nav({ links }) {
+function Nav({ links, background }) {
 
     const [show, handleShow] = useState(false)
     const [searchBar, setSearchBar] = useState(false)
@@ -33,8 +33,8 @@ function Nav({ links }) {
     }
 
   return (
-    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'}`}>
-        <div className='flex space-between items-center'>
+    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'} ${background && 'bg-[#111] z-0'}`}>
+        <div className='flex relative inset-0 space-between items-center'>
             <img
                 className='object-contain cursor-pointer ml-10 mr-5'
                 src={netflixLogo}

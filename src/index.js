@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
-import {Elements} from '@stripe/react-stripe-js';
+
 
 
 const container = document.getElementById('root');
@@ -16,9 +16,10 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <App />
+          <App />
       </Router>
     </Provider>
+    
   </React.StrictMode>
 );
 

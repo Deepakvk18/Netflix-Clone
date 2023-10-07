@@ -98,12 +98,12 @@ const PasswordScreen = () => {
                         <div>
                             <input 
                                 type="password" 
-                                className={`h-12 w-full mt-4 mb-2 p-4 pb-2.5 pt-4 mr-2 text-sm text-black rounded-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-600 peer ring-1 ring-gray-500 ${passError &&  'border-b-2 border-b-errorText ring-0'}`}
+                                className={`h-12 w-full bg-transparent mt-4 mb-2 p-4 pb-2.5 pt-4 mr-2 text-sm text-black rounded-sm focus:border-gray-400 focus:ring-1 focus:ring-gray-600 peer ring-1 ring-gray-500 ${passError &&  'border-b-2 border-b-errorText ring-0'}`}
                                 placeholder=" "
                                 value={password}
                                 onChange={(e)=>setPassword((prev)=>e.target.value)}
                             />
-                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-3 peer-focus:scale-90 peer-focus:-translate-y-4 left-1">                                
+                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 -z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-3 peer-focus:scale-90 peer-focus:-translate-y-4 left-1 peer-focus:font-bold ">                                
                                 Enter your Password
                             </label>
                         </div>

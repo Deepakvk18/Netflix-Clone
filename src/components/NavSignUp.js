@@ -32,7 +32,7 @@ const NavSignUp = () => {
                 Sign out
             </a>
         ) : (
-            <a href='/signin' className='text-2xl font-bold ml-auto mr-20'>
+            <a href='/login' className='text-2xl font-bold ml-auto mr-20'>
                 Sign In
             </a>
         )}

@@ -74,12 +74,12 @@ function SignUpScreen() {
                             <div>
                                 <input 
                                     type="text" 
-                                    className={`email__input h-14 w-96 p-4 pb-2.5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
+                                    className={`email__input h-14 w-96 p-5 pb-2.5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
                                     placeholder=" "
                                     value={email}
                                     onChange={(e)=>setEmail((prev)=>e.target.value)}
                                 />
-                                <label className="absolute text-sm text-gray-300 p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-5 left-1">
+                                <label className="absolute text-sm text-gray-300 p-4 duration-300 transform -translate-y-4 scale-90 top-2 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-5 left-1 -z-40 peer-focus:font-bold">
                                     Email address
                                 </label>
                             </div>

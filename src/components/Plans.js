@@ -93,7 +93,7 @@ export const PlanTable = () => {
 export const Confirmation = ({ submit }) =>{
     return (
         <div className="relative inset-0 flex justify-center items-center">
-            <div className="block mt-16 w-[20vw]">
+            <div className="block mt-16 md:w-[40vw] lg:w-[23vw]">
                 <img
                     src="https://assets.nflxext.com/ffe/siteui/acquisition/simplicity/Checkmark.png"
                     alt="plans"

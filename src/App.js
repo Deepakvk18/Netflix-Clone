@@ -14,6 +14,7 @@ import { Checkout } from './components/Checkout';
 import PasswordScreen from './components/PasswordScreen';
 import Plans from './components/Plans';
 import Payment from './components/Payment';
+import Profile from './components/Profile';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
               <Route exact path='/browse' element={<HomeScreen />} />
               <Route exact path='/account' element={<Account />} />
               <Route exact path='/checkout' element={<Checkout />} />
+              <Route exact path='/manageProfiles' element={<Profile />} />
             </Route>
           </Routes>
     </div>
