@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react'
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, createSearchParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { faBell } from '@fortawesome/free-solid-svg-icons'
 import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
+import ProfilePopover from './ProfilePopOver'
+import MigrateProfile from './MigrateProfile'
 
 function Nav({ links, background }) {
 
     const [show, handleShow] = useState(false)
     const [searchBar, setSearchBar] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
-
+    const [searchQuery, setSearchQuery] = useSearchParams()
+    const [migrateProfile, setMigrateProfile] = useState(false)
+    const navigate = useNavigate()
+    
+    console.log(searchQuery);
     const transitionNavBar = () => {
         if (window.scrollY > 50){
             handleShow(true)
@@ -32,8 +36,14 @@ function Nav({ links, background }) {
         element.focus()
     }
 
+    const changeSearch = (e) => {
+        setSearchQuery(e.target.value)
+        console.log(searchQuery);
+        navigate(`/browse?${createSearchParams({query: e.target.value})}`)
+    }
+
   return (
-    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'} ${background && 'bg-[#111] z-0'}`}>
+    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'} ${background && 'bg-[#111]'}`}>
         <div className='flex relative inset-0 space-between items-center'>
             <img
                 className='object-contain cursor-pointer ml-10 mr-5'
@@ -50,14 +60,13 @@ function Nav({ links, background }) {
                         <Link to='/movies' className='nav-links'>Movies</Link>
                         <Link to='/new' className='nav-links'>New & Popular</Link>
                         <Link to='/myList' className='nav-links'>My List</Link>
-                        <Link to='/browseByLanguages' className='nav-links'>Browse By Languages</Link>
                     </div>
                     { searchBar && 
                         <input
                             className='transition-all ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 w-[400px] px-2 py-1 ring-slate-400 ring-2 mr-4'
                             id='searchBar'
                             value={searchQuery}
-                            onChange={(e)=>setSearchQuery(e.target.value)}
+                            onChange={(e)=>changeSearch}
                             placeholder='Titles, people, genres'
                             onBlur={()=>setSearchBar(false)}
                         />
@@ -81,25 +90,15 @@ function Nav({ links, background }) {
                 </div>
                 
             }
-            <div className='fixed flex right-20 group items-center cursor-pointer'>
-                <img
-                    className='rounded-md cursor-pointer'
-                    src='https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png'
-                    alt='profile'
-                    width={33}
-                />
-                <FontAwesomeIcon 
-                    className='m-2 cursor-pointer hover:transform hover:rotate-180 transition-all ease-in-out delay-150 duration-300 group-hover:rotate-180'
-                    icon={faCaretDown}
-                    size='sm' 
-                    style={{color: '#fff'}} 
-                />
-            </div>
             
+            <ProfilePopover setMigrateProfile={setMigrateProfile}/>
+            { migrateProfile && <MigrateProfile setMigrateProfile={setMigrateProfile}/> }
+
         </div>
         
     </nav>
   )
 }
+
 
 export default Nav

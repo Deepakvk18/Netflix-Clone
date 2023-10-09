@@ -16,6 +16,7 @@ import PasswordScreen from './components/PasswordScreen';
 import Plans from './components/Plans';
 import Payment from './components/Payment';
 import Profile from './components/Profile';
+import ChangePlan from './components/ChangePlan';
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
               <Route exact path='/account' element={<Account />} />
               <Route exact path='/checkout' element={<Checkout />} />
               <Route exact path='/manageProfiles' element={<Profile />} />
+              <Route exact path='/changePlan' element={<ChangePlan />}/>
             </Route>
           </Routes>
     </div>

@@ -5,8 +5,10 @@ const ProfileEdit = ({ editProfile, addProfile, setEditProfile, setNewProfile, p
     const [name, setName] = useState(profile ? profile.name : '')
     const [children, setChildren] = useState(profile ? profile.children : false)
     const [backendError, setBackendError] = useState('')
+
   return (
-    <div className='absolute bg-[#111] inset-0 h-full w-full flex z-40 justify-center items-center bg-opacity-80'>
+    <div className='fixed bg-[#111] text-white inset-0 h-[100%] w-[100%] flex z-40 justify-center items-center bg-opacity-80'>
+        
         <div className='flex flex-col bg-[#111] flex-wrap p-5 rounded-xl w-[40%] ring-white ring-1 items-center'>
             { backendError && 
                 <div className='bg-errorText text-white text-left p-2 text-sm rounded-lg mb-4'>

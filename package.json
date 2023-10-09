@@ -24,9 +24,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc && vite build",
-    "serve": "vite preview"
+    "dev": "vite",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [

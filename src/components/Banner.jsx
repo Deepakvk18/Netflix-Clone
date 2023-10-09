@@ -47,7 +47,7 @@ export default function Banner() {
                 </button>
               </div>
           </div>
-          <div className="bg-gradient-to-b w-[99.4vw] z-10 from-transparent to-[#111] h-[500px] float-left" />  
+          <div className="bg-gradient-to-b w-[99.4vw] z-10 from-transparent to-[#111] h-[600px] float-left" />  
         </div>
        
     </header>

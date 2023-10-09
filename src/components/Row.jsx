@@ -5,7 +5,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import LargeMovieCard from './LargeMovieCard';
 
 
-function Row({ title, fetchUrl }) { 
+function Row({ title, fetchUrl, type }) { 
 
     const  { data, isLoading, isError, error } = useGetMoviesQuery(fetchUrl);
 
@@ -13,6 +13,8 @@ function Row({ title, fetchUrl }) {
 
     if(isLoading) return <div>Loading...</div>
     if(isError) return <div>{error}</div>
+
+    // console.log(fetchUrl, movies);
     
   return (
     <div className="relative text-white ml-10 mb-16 mt-5 group/outer z-40">
@@ -27,7 +29,7 @@ function Row({ title, fetchUrl }) {
         </a>
         <div className="relative flex h-40 overflow-x-auto overflow-y-visible scrollbar-hide" style={{overflowY: "visible"}}>
             { movies.map((movie)=>(
-                    <MovieCard key={movie?.id} movie={movie} />
+                    <MovieCard key={movie?.id} movie={movie} type={type}/>
             )) }
         </div>
     </div>

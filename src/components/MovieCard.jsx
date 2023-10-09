@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import genres from '../genres'
 
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, type }) => {
     const baseurl = 'https://image.tmdb.org/t/p/original/'
 
     if(!movie.backdrop_path) return <></>

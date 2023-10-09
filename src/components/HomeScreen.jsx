@@ -1,8 +1,13 @@
 import Banner from './Banner'
 import Nav from './Nav'
 import Row from './Row'
+import { useState } from 'react'
+import Search from './Search'
 
 function HomeScreen() {
+
+  const [searchQuery, setSearchQuery] = useState('')
+
   return (
     <div className=''>
       
@@ -10,7 +15,10 @@ function HomeScreen() {
 
         <Nav links />
         
-        <Banner />
+        {searchQuery ?
+          <Search/> : (
+            <div>
+              <Banner />
         
         <Row
           title='Netflix Originals'
@@ -56,6 +64,9 @@ function HomeScreen() {
           title='Documentary movies'
           fetchUrl={'fetchDocumentaryMovies'}
         />
+            </div>
+          )
+        }
         
     </div>
   )

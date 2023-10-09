@@ -20,7 +20,7 @@ const Plans = () => {
   )
 }
 
-export const PlanTable = () => {
+export const PlanTable = ({ currentSubscription }) => {
 
     const { data: plans, error, isError, isLoading } = useGetProductsQuery()
     const [currentPlan, setCurrentPlan] = useState('')
@@ -67,7 +67,7 @@ export const PlanTable = () => {
                 </div>
                 <div className="flex flex-row flex-wrap w-full">
                     { plans?.data.map((plan) => (
-                        <PlanCard key={plan?.id} data={plan} changePlan={changePlan} currentPlan={currentPlan} />
+                        <PlanCard key={plan?.id} data={plan} changePlan={changePlan} currentPlan={currentPlan} currentSubscription={currentSubscription}/>
                     ))}
                 </div>
                 <div className="block">
@@ -76,7 +76,8 @@ export const PlanTable = () => {
                     Only people who live with you may use your account. 
                     <br/>Watch on 4 different devices at the same time with Premium, 2 with Standard, and 1 with Basic and Mobile.
                     </span>
-                    <div className="flex justify-center items-center">
+                    {! currentSubscription && (
+                        <div className="flex justify-center items-center">
                         <button 
                             className='bg-netflixColor mt-8 h-14 w-[30vw] mb-4 text-2xl text-white font-semibold rounded-sm justify-center items-center'
                             onClick={submit}
@@ -84,6 +85,16 @@ export const PlanTable = () => {
                             Next
                         </button>
                     </div>
+                    )}
+                    
+                    {currentSubscription && (currentPlan !== currentSubscription.id) && (
+                        <div className=" flex w-full items-center justify-center">
+                            <button className="bg-netflixColor mt-8 h-14 w-[30vw] mb-4 text-2xl text-white font-semibold rounded-sm justify-center items-center" onClick={()=>{}}>
+                                Change Plan
+                            </button>
+                        </div>
+                    )}
+            
                 </div>
             </div>
         </div>

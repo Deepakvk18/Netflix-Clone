@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useState  } from "react"
 
-const PlanCard = ({ data, changePlan, currentPlan }) => {
+const PlanCard = ({ data, changePlan, currentPlan, currentSubscription }) => {
 
     const [active, setActive] = useState(false)
 
@@ -21,9 +21,9 @@ const PlanCard = ({ data, changePlan, currentPlan }) => {
   return (
     <div className={`mb-4 m-4 lg:max-w-[21%] md:w-[45%] w-full cursor-default pt-8 justify-center ${active ? 'text-netflixColor': 'bg-white'}`} >
         <div className="block rounded-md h-[100%] bg-white ring-netflixColor ring-1" onClick={handleClick}>
-            <div className={`p-2 flex flex-wrap flex-col justify-center items-center ${active && 'bg-netflixMsgColor text-white'}`}>
+            <div className={`p-2 flex flex-wrap flex-col justify-center items-center ${active && 'bg-netflixMsgColor text-white'} ${currentSubscription?.id === data.id ? 'bg-black text-white' : ''}`}>
                     <h2 className="text-4xl my-2 font-semibold">
-                        {data?.name}
+                        {data?.name} <span className="text-sm">{ currentSubscription?.id === data.id && '(Current)'}</span>
                     </h2>
                     <h3 className="text-2xl">
                     ₹ {'199'} /Month
@@ -39,7 +39,11 @@ const PlanCard = ({ data, changePlan, currentPlan }) => {
                     ))}
                 </ul>
             </div>
+            
+        
+        
         </div>
+        
     </div>
   )
 }
