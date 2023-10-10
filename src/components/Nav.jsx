@@ -7,15 +7,14 @@ import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 import ProfilePopover from './ProfilePopOver'
 import MigrateProfile from './MigrateProfile'
 
-function Nav({ links, background }) {
+function Nav({ links, background, searchParams }) {
 
     const [show, handleShow] = useState(false)
     const [searchBar, setSearchBar] = useState(false)
-    const [searchQuery, setSearchQuery] = useSearchParams()
     const [migrateProfile, setMigrateProfile] = useState(false)
+    const [searchParam, setSearchParam] = useState('')
     const navigate = useNavigate()
-    
-    console.log(searchQuery);
+
     const transitionNavBar = () => {
         if (window.scrollY > 50){
             handleShow(true)
@@ -36,10 +35,12 @@ function Nav({ links, background }) {
         element.focus()
     }
 
-    const changeSearch = (e) => {
-        setSearchQuery(e.target.value)
-        console.log(searchQuery);
-        navigate(`/browse?${createSearchParams({query: e.target.value})}`)
+    const onKeyUp = (e) => {
+        if (e.key === 'Enter') {
+            console.log(searchParam);
+            navigate(`/search?${createSearchParams({query: e.target.value})}`)
+        }
+        
     }
 
   return (
@@ -65,10 +66,11 @@ function Nav({ links, background }) {
                         <input
                             className='transition-all ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 w-[400px] px-2 py-1 ring-slate-400 ring-2 mr-4'
                             id='searchBar'
-                            value={searchQuery}
-                            onChange={(e)=>changeSearch}
+                            value={searchParams ? searchParams : searchParam}
+                            onChange={(e)=>setSearchParam(e.target.value)}
                             placeholder='Titles, people, genres'
                             onBlur={()=>setSearchBar(false)}
+                            onKeyUp={onKeyUp}
                         />
                     }
                     <div className={`float-right ${searchBar ? 'ml-0': 'ml-44'}`}>

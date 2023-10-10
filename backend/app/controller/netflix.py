@@ -11,14 +11,15 @@ API_KEY = os.getenv('TMDB_API_KEY')
 
 api_requests = {
     'fetchTrending': f'/trending/all/week?api_key={API_KEY}&language=en-US',
-    'popularTV': f'/tv/popular?api_key={API_KEY}&language=en-US',
+    'fetchPopularTV': f'/tv/popular?api_key={API_KEY}&language=en-US',
     'fetchNetflixOriginals': f'discover/tv?api_key={API_KEY}&with_networks=213',
+    'fetchTopRatedTV':  f'/tv/top_rated?api_key={API_KEY}&language=en-US',
     'fetchTopRated':  f'/movie/top_rated?api_key={API_KEY}&language=en-US',
     'fetchActionMovies': f'/discover/movie?api_key={API_KEY}&with_genres=28',
     'fetchComedyMovies': f'/discover/movie?api_key={API_KEY}&with_genres=35',
     'fetchHorrorMovies': f'/discover/movie?api_key={API_KEY}&with_genres=27',
     'fetchRomanceMovies': f'/discover/movie?api_key={API_KEY}&with_genres=10749',
-    'fetchDocumentaryMovies': f'/discover/movie?api_key={API_KEY}&with_genres=99',
+    'fetchDocumentaries': f'/discover/movie?api_key={API_KEY}&with_genres=99',
 }
 
 API_BASE_URL = 'https://api.themoviedb.org/3'
@@ -28,6 +29,7 @@ def return_api_response(url):
     headers = {"accept": "application/json"}
 
     response = requests.get(url, headers=headers)
+    print(response)
     return response.json()
 
 
@@ -52,11 +54,19 @@ class ManyShows(Resource):
 
 
 @netflix_api.route('/search/<query>/<type>/<adult>/<int:page>')
-class GetSearchResults(Resource):
+class GetTvOrMovieSearchResults(Resource):
 
     def get(self, type, query, adult, page=1):
         """Get search results for a query and page number"""
         url = f'{API_BASE_URL}/search/{type}?api_key={API_KEY}&query={query}&adult={adult}&language=en-US&page=1&include_adult={adult}&page={page}'
+        return return_api_response(url)
+
+@netflix_api.route('/search/<query>/<int:page>')
+class GetSearchResults(Resource):
+
+    def get(self, query, page=1):
+        """Get search results for a query and page number"""
+        url = f'{API_BASE_URL}/search/multi?query={query}&include_adult=false&api_key={API_KEY}&page={page}'
         return return_api_response(url)
 
 
@@ -100,7 +110,6 @@ class GetShowVideos(Resource):
     def get(self, show_id, type):
         """Get videos of a particular show"""
         url = f'{API_BASE_URL}/{type}/{show_id}/videos?api_key={API_KEY}'
-        print(url)
         return return_api_response(url)
 
 @netflix_api.route('/db')

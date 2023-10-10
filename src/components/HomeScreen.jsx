@@ -1,13 +1,9 @@
 import Banner from './Banner'
 import Nav from './Nav'
 import Row from './Row'
-import { useState } from 'react'
-import Search from './Search'
+
 
 function HomeScreen() {
-
-  const [searchQuery, setSearchQuery] = useState('')
-
   return (
     <div className=''>
       
@@ -15,58 +11,47 @@ function HomeScreen() {
 
         <Nav links />
         
-        {searchQuery ?
-          <Search/> : (
-            <div>
-              <Banner />
+        <Banner />
         
         <Row
           title='Netflix Originals'
-          fetchUrl={'fetchNetflixOriginals'}
         />
 
         <Row
           title='Trending Now'
-          fetchUrl={'fetchTrending'}
         />
 
         <Row
-          title='Popular TV Shows'
-          fetchUrl={'popularTV'}
+          title='Popular TV'
         />
 
         <Row
           title='Top Rated Movies'
-          fetchUrl={'fetchTopRated'}
+        />
+
+        <Row
+          title='Top Rated TV'
         />
 
         <Row
           title='Action Movies'
-          fetchUrl={'fetchActionMovies'}
         />
 
         <Row
           title='Comedy Movies'
-          fetchUrl={'fetchComedyMovies'}
         />
 
         <Row
-          title='Horror movies'
-          fetchUrl={'fetchHorrorMovies'}
+          title='Horror Movies'
         />
 
         <Row
-          title='Romance movies'
-          fetchUrl={'fetchRomanceMovies'}
+          title='Romance Movies'
         />
 
         <Row
-          title='Documentary movies'
-          fetchUrl={'fetchDocumentaryMovies'}
+          title='Documentaries'
         />
-            </div>
-          )
-        }
         
     </div>
   )

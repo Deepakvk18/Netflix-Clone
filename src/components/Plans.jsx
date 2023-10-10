@@ -87,7 +87,7 @@ export const PlanTable = ({ currentSubscription }) => {
                     </div>
                     )}
                     
-                    {currentSubscription && (currentPlan !== currentSubscription.id) && (
+                    {currentSubscription &&  (currentPlan !== currentSubscription.id) && (
                         <div className=" flex w-full items-center justify-center">
                             <button className="bg-netflixColor mt-8 h-14 w-[30vw] mb-4 text-2xl text-white font-semibold rounded-sm justify-center items-center" onClick={()=>{}}>
                                 Change Plan

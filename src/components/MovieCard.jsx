@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import genres from '../genres'
 
 
-const MovieCard = ({ movie, type }) => {
+const MovieCard = ({ movie, type, search }) => {
     const baseurl = 'https://image.tmdb.org/t/p/original/'
 
-    if(!movie.backdrop_path) return <></>
+    if(!movie?.backdrop_path) return <></>
 
   return (
-    <div className={`relative overflow-y-visible max-w-[228px] flex-shrink-0 w-[228px] mx-1 transition-transform transform mt-6 group/inner z-0 hover:scale-125 hover:z-20 rounded-lg mb-20 hover:mb-0 overflow-visible hover:shadow-xl`} onClick={()=>console.log(movie)}>
+    <div className={`relative overflow-y-visible max-w-[228px] flex-shrink-0 w-[228px] mx-1 transition-transform transform group/inner z-0 hover:scale-125 hover:z-20 rounded-lg ${search ? 'mb-0': 'mb-20 mt-6'} hover:mb-0 overflow-visible hover:shadow-xl`} onClick={()=>console.log(movie)}>
         <LazyLoadImage
             key={movie?.id}
             className={`relative object-contain z-0 w-[228px] group-hover/inner:-translate-y-1/2 transition-transform`}

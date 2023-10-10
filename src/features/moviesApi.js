@@ -6,7 +6,14 @@ export const moviesApi = apiSlice.injectEndpoints({
         getMovies: builder.query({
             query: (query) => (`netflix/shows/${query}`)
         }),
+        searchShows: builder.query({
+            query: (args) => {
+                const { query, page } = args
+                console.log(args);
+                return {url: (`netflix/search/${query}/${page}`)}
+            }
+        }),
     })
 })
 
-export const { useGetMoviesQuery } = moviesApi
+export const { useGetMoviesQuery, useSearchShowsQuery } = moviesApi

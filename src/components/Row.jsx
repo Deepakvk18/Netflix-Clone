@@ -2,19 +2,20 @@ import { useGetMoviesQuery } from '../features/moviesApi'
 import MovieCard from './MovieCard';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
-import LargeMovieCard from './LargeMovieCard';
+import { titles } from '../utils/helper'; 
 
+function Row({ title }) { 
 
-function Row({ title, fetchUrl, type }) { 
-
-    const  { data, isLoading, isError, error } = useGetMoviesQuery(fetchUrl);
+    const  { data, isLoading, isError, error } = useGetMoviesQuery(titles[title]?.fetchUrl);
 
     const movies = data?.results
+    
+    if (title === 'Popular TV')
 
     if(isLoading) return <div>Loading...</div>
     if(isError) return <div>{error}</div>
 
-    // console.log(fetchUrl, movies);
+    console.log(title, movies);
     
   return (
     <div className="relative text-white ml-10 mb-16 mt-5 group/outer z-40">
@@ -27,9 +28,9 @@ function Row({ title, fetchUrl, type }) {
                 </a>
             </h2>
         </a>
-        <div className="relative flex h-40 overflow-x-auto overflow-y-visible scrollbar-hide" style={{overflowY: "visible"}}>
-            { movies.map((movie)=>(
-                    <MovieCard key={movie?.id} movie={movie} type={type}/>
+        <div className="relative flex h-40 overflow-y-visible scrollbar-hide" style={{overflowY: "visible"}}>
+            { movies?.map((movie)=>(
+                    <MovieCard key={movie?.id} movie={movie} type={titles[title].type}/>
             )) }
         </div>
     </div>

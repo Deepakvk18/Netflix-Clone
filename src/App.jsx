@@ -17,6 +17,7 @@ import Plans from './components/Plans';
 import Payment from './components/Payment';
 import Profile from './components/Profile';
 import ChangePlan from './components/ChangePlan';
+import Search from './components/Search';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
               <Route exact path='/checkout' element={<Checkout />} />
               <Route exact path='/manageProfiles' element={<Profile />} />
               <Route exact path='/changePlan' element={<ChangePlan />}/>
+              <Route exact path='/search' element={<Search />} />
             </Route>
           </Routes>
     </div>
