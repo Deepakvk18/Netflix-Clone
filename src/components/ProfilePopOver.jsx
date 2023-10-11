@@ -3,14 +3,14 @@ import {
     PopoverHandler,
     PopoverContent,
   } from "@material-tailwind/react";
-  import profiles, { getProfileImgUrl } from '../profiles'
+  import profiles, { getProfileImgUrl } from '../utils/profiles'
   import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
   import React from "react";
   import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
    
   export function ProfilePopover({ setMigrateProfile }) {
     const [openPopover, setOpenPopover] = React.useState(false);
-    const currentProfile = profiles[0]
+    const currentProfile = profiles[3]
     
    
     const triggers = {

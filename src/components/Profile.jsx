@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import profiles from '../profiles'
+import profiles from '../utils/profiles'
 import ProfileCard from './ProfileCard'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

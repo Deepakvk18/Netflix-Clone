@@ -1,5 +1,5 @@
 import Nav from "./Nav"
-import profiles from '../profiles'
+import profiles from '../utils/profiles'
 import ProfileAccordion from "./ProfileAccordion"
 import { useState } from "react"
 import ProfileEdit from "./ProfileEdit"

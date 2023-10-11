@@ -19,8 +19,10 @@ class MyList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     profile_id = db.Column(db.Integer)
     show_id = db.Column(db.Integer)
+    type = db.Column(db.String(8))
     
 class NowWatching(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     profile_id = db.Column(db.Integer)
     show_id = db.Column(db.Integer)
+    type = db.Column(db.String(8))

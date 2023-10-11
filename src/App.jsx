@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import './index.css';
-import HomeScreen from './components/HomeScreen';
+import HomeScreen, { NavLinkPage } from './components/HomeScreen';
 import {
   Routes,
   Route,
@@ -18,15 +18,19 @@ import Payment from './components/Payment';
 import Profile from './components/Profile';
 import ChangePlan from './components/ChangePlan';
 import Search from './components/Search';
+import ShowDetails from './components/ShowDetails';
+import Watch from './components/Watch';
 
 function App() {
+  const navigate = useNavigate()
+  // if (localStorage.getItem('userId')) {
+  //   navigate('/browse')
+  // }
 
-  if (localStorage.getItem('userId')) {
-    new Promise((resolve) => setTimeout(resolve, 1000));
-  }
+ 
 
   return (
-    <div className="app w-full h-full">
+    <div className="app relative w-full h-full ">
           <Routes>
             <Route exact path='/' element={<LoginScreen />} />
             <Route exact path='/login' element={<SignInScreen />} />
@@ -39,13 +43,17 @@ function App() {
             </Route>
             <Route element={<ProtectedRoute />} >
               <Route exact path='/browse' element={<HomeScreen />} />
+              <Route exact path='/discover/:title' element={<NavLinkPage />} />
               <Route exact path='/account' element={<Account />} />
               <Route exact path='/checkout' element={<Checkout />} />
               <Route exact path='/manageProfiles' element={<Profile />} />
               <Route exact path='/changePlan' element={<ChangePlan />}/>
               <Route exact path='/search' element={<Search />} />
+              <Route exact path='/details/:type/:id' element={<ShowDetails />} />
+              <Route exact path='/watch/:type/:id' element={<Watch />} />
             </Route>
           </Routes>
+          
     </div>
   );
 }

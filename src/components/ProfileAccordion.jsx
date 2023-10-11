@@ -1,4 +1,4 @@
-import { getProfileImgUrl } from "../profiles"
+import { getProfileImgUrl } from "../utils/profiles"
 
 const ProfileAccordion = ({ profile, setOpenEdit, setCurrentProfile }) => {
     

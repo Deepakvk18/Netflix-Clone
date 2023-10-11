@@ -1,4 +1,4 @@
-import { getProfileImgUrl } from '../profiles'
+import { getProfileImgUrl } from '../utils/profiles'
 import { useNavigate } from 'react-router-dom'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

@@ -1,7 +1,8 @@
-
-export const navLinks = [
-
-]
+export const navTitles = {
+    'TV': 'Top Rated TV',
+    'Movie': 'Top Rated Movies',
+    'Popular': 'Trending Now',
+}
 
 export const titles = {
     'Netflix Originals': {

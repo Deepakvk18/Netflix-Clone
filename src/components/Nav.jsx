@@ -36,31 +36,34 @@ function Nav({ links, background, searchParams }) {
     }
 
     const onKeyUp = (e) => {
+        console.log('keyUp', e.key);
         if (e.key === 'Enter') {
             console.log(searchParam);
             navigate(`/search?${createSearchParams({query: e.target.value})}`)
         }
-        
     }
 
   return (
-    <nav className={`fixed items-center py-1 w-full z-10 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111] z-50'} ${background && 'bg-[#111]'}`}>
+    <nav className={`fixed items-center py-1 w-full z-5000 top-0 transition-all ease-in-out delay-150 duration-1000 ${show && 'bg-[#111]'} ${background && 'bg-[#111]'}`}>
+        
         <div className='flex relative inset-0 space-between items-center'>
-            <img
-                className='object-contain cursor-pointer ml-10 mr-5'
-                src={netflixLogo}
-                alt='logo'
-                width={100}
-            />
+            <a href="/">
+                <img
+                    className='object-contain cursor-pointer ml-10 mr-5'
+                    src={netflixLogo}
+                    alt='logo'
+                    width={100}
+                />
+            </a>
 
             { links &&
                 <div className='w-full hidden lg:flex h-10 items-center'>
                     <div className={`justify-between  float-left ${searchBar ? 'mr-32': 'mr-96'}`}>
-                        <Link to='/browse ' className='nav-links'>Home</Link>
-                        <Link to='/tv-shows' className='nav-links'>TV Shows</Link>
-                        <Link to='/movies' className='nav-links'>Movies</Link>
-                        <Link to='/new' className='nav-links'>New & Popular</Link>
-                        <Link to='/myList' className='nav-links'>My List</Link>
+                        <a href='/browse' className='nav-links'>Home</a>
+                        <a href='/discover/TV' className='nav-links'>TV Shows</a>
+                        <a href='/discover/Movie' className='nav-links'>Movies</a>
+                        <a href='/discover/Popular' className='nav-links'>New & Popular</a>
+                        <a href='/myList' className='nav-links'>My List</a>
                     </div>
                     { searchBar && 
                         <input
@@ -81,7 +84,7 @@ function Nav({ links, background, searchParams }) {
                             style={{color: "#fff",}} 
                             onClick={showSearchBar}
                         />
-                        <Link to='/children' className='nav-links mr-4'>Children</Link>
+                        <a onClick={()=>{}} className='cursor-pointer nav-links mr-4'>Children</a>
                         <FontAwesomeIcon 
                             icon={faBell} 
                             className='mr-4 cursor-pointer'
@@ -95,9 +98,7 @@ function Nav({ links, background, searchParams }) {
             
             <ProfilePopover setMigrateProfile={setMigrateProfile}/>
             { migrateProfile && <MigrateProfile setMigrateProfile={setMigrateProfile}/> }
-
         </div>
-        
     </nav>
   )
 }

@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
     extend: {
+      zIndex: {
+        '1000': '1000',
+        '2000': '2000',
+        '5000': '5000'
+      },
       colors: {
         netflixMsgColor: 'rgb(235, 57, 66)',
         netflixColor: '#e50914',

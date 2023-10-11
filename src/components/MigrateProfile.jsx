@@ -1,4 +1,4 @@
-import profiles from "../profiles"
+import profiles from "../utils/profiles"
 import { useState, useEffect } from "react"
 import { isValidEmail, isValidPassword } from "../utils/validator"
 import messages from "../utils/messages"
