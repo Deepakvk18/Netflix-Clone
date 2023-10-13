@@ -59,14 +59,20 @@ class FireBaseAuth:
 
     @staticmethod
     def get_token():
-        jwt = request.cookies.get('access_token')
-        if not jwt:
+        print (request.headers)
+        try:
+            jwt = request.headers.get('Authorization').split()[1]
+
+        except Exception as exc:
+            logging.error(str(exc))
             raise AuthException(message='NO_TOKEN_FOUND')
+            
         return jwt
 
     @staticmethod
     def get_refresh_token():
         refresh = request.cookies.get('refresh_token')
+        print(request.headers.get('Set-Cookie'))
         if not refresh:
             raise AuthException(message='NO_REFRESH_TOKEN_FOUND')
         return refresh

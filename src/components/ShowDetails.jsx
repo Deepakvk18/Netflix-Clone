@@ -17,11 +17,11 @@ const ShowDetails = () => {
   const navigate = useNavigate()
   const [season, setSeason] = useState(1)
 
-  console.log(show);
+  console.log(showId, type);
    
 
   return (
-    <div className='bg-[#111] z-0 text-white flex justify-center'>
+    <div className='bg-[#111] z-0 text-white cursor-default flex justify-center'>
       <Nav links />
       <title>{show?.title || show?.name || show?.original_name} - Netflix Clone</title>
       <div className="bg-[#111] w-full h-[100%] flex-grow">
@@ -55,7 +55,7 @@ const ShowDetails = () => {
                     <div className="float-right">
                       { show?.created_by?.length > 0 && <p>Creator(s): <span> { show?.created_by?.map((artist)=> artist.name).join(', ') } </span></p> }
                       <p className='text-sm line-clamp-1'>
-                        Genres: {show?.genres.map((genre)=>(genre.name)).join(', ')}
+                        Genres: {show?.genres?.map((genre)=>(genre.name)).join(', ')}
                       </p>
           
                       { show?.spoken_languages ? <p className='text-sm line-clamp-1'>

@@ -20,6 +20,7 @@ import ChangePlan from './components/ChangePlan';
 import Search from './components/Search';
 import ShowDetails from './components/ShowDetails';
 import Watch from './components/Watch';
+import MyList from './components/MyList';
 
 function App() {
   const navigate = useNavigate()
@@ -49,6 +50,7 @@ function App() {
               <Route exact path='/manageProfiles' element={<Profile />} />
               <Route exact path='/changePlan' element={<ChangePlan />}/>
               <Route exact path='/search' element={<Search />} />
+              <Route exact path='/myList' element={<MyList />} />
               <Route exact path='/details/:type/:id' element={<ShowDetails />} />
               <Route exact path='/watch/:type/:id' element={<Watch />} />
             </Route>

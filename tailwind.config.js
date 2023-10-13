@@ -21,6 +21,7 @@ module.exports = {
         errorText: '#E87C03',
         loginFormText: '#737373',
         buttonBg: '#6D6D6EB3',
+        transparentBg: 'rgba(0,0,0,.4)',
       },
     },
   },

@@ -20,9 +20,9 @@ export default function Banner({ nth }) {
         backgroundPosition: 'center'
     }}>
         <div className='block'>
-          <div className='pt-44 ml-11 h-14 w-[45%]'>
+          <div className='pt-44 mx-11 h-14 sm:w-[45%]'>
               <div className='mt-8'>
-                <h1 className="text-8xl font-bold ml-0 mb-5">
+                <h1 className="text-4xl xl:text-8xl font-bold ml-0 mb-5">
                   { movie?.title || movie?.name || movie?.original_name }
                 </h1>
                 <h1 className="text-white text-lg line-clamp-3 mt-4 mb-5">

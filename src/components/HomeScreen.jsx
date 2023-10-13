@@ -80,13 +80,13 @@ export const NavPages = ({ query })=>{
   return (
     <div className='min-h-[100vh] text-white'>
       <title> {query} - Netflix Clone </title>
-      <div className='pt-20 pl-5 pb-10 text-4xl text-white'>
+      <div className='pt-20 px-5 pb-10 text-4xl text-white'>
           {query}
       </div>
       <div>
-        <div className='bg-[#111] flex mt-0 pl-5 flex-wrap h-full z-10'>
+        <div className='bg-[#111] mt-0 px-5 flex justify-center flex-wrap h-full z-10'>
             {shows?.map((show)=>(
-                <MovieCard key={show?.id} movie={show}/>
+                <MovieCard key={show?.id} movie={show} type={titles[query].type}/>
             ))}
         </div>
       </div>
@@ -98,7 +98,6 @@ export const NavLinkPage = ()=>{
 
   const {title} = useParams()
   console.log(title);
-  console.log(navTitles['TV']);
 
   return (
     <div className=''>

@@ -3,7 +3,7 @@ from os import environ
 
 from celery import Celery
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, request, make_response
 from flask_cors import CORS
 from flask_restx import Api
 from requests.exceptions import HTTPError
@@ -18,6 +18,7 @@ from .controller.payments import payments_api
 from .extensions import (db)
 from .exceptions.custom_exceptions import (NetflixException, AuthException)
 from .utils.messages import msg
+from . import constants
 
 celery = Celery(__name__)
 
@@ -29,7 +30,14 @@ def create_app():
     app = Flask(app_config[APPLICATION_ENV].APP_NAME)
     app.config.from_object(app_config[APPLICATION_ENV])
 
-    CORS(app, resources={r'*': {'origins': '*'}}, support_credentials=True)
+    cors_config = {
+        'origins': [constants.FRONTEND],
+        'methods': ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'],
+        'allowed_headers': ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials', 'Access-Control-Allow-Origin'],
+        'expose_headers': '*',
+    }
+
+    
     db.init_app(app)
 
     with app.app_context():
@@ -40,6 +48,7 @@ def create_app():
     celery.conf.update(result_backend=app.config['RESULT_BACKEND'])
 
     register_blueprint(app)
+    CORS(app, resources={r'*': cors_config }, supports_credentials=True)
 
     return app
 

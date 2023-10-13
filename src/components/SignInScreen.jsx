@@ -5,12 +5,10 @@ import { isValidEmail, isValidPassword } from '../utils/validator'
 import messages from '../utils/messages'
 import { useNavigate } from 'react-router-dom'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import './assets/styles/LoginScreen.css'
-import axios from 'axios'
-import {backend} from '../utils/baseUrl'
 import { useDispatch } from 'react-redux'
 import { login } from '../features/userSlice'
 import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
+import { useLoginMutation } from '../features/authApi'
 
 function SignInScreen() {
 
@@ -22,6 +20,7 @@ function SignInScreen() {
     const [backendError, setBackendError] = useState("")
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [loginMutation, mutationResult] = useLoginMutation()
 
     const onSubmit = async (e)=>{
             e.preventDefault()
@@ -33,22 +32,28 @@ function SignInScreen() {
                 setPassError(messages.passwordInvalid)
             }
             if(emailError || passError) return;
+            if (!email || !password) {
+                setBackendError('Please fill all the fields')
+                return
+            }
 
             setEmailError('')
             setPassError('')
-            try{
-                const res = await axios.post(backend + '/auth/signin', { email: email, password: password })
-                dispatch(login(res.data))
-                localStorage.setItem('user', res.data)
-                console.log(localStorage.getItem('user'))
-                console.log(res.data);
-                navigate('/browse')
-            } catch (error){
-                setBackendError(error.response ? error.response.data.message: error.message)
-                console.error(error)
-            }
-    
-    }
+
+            await loginMutation({ email, password })
+                    .unwrap()
+                    .then((payload)=> {
+                        dispatch(login(payload))
+                        console.log(payload);
+                        // navigate('/browse')
+                    })
+                    .catch((error)=>{
+                        console.error(error);
+                        setBackendError(error.response ? error.response.data.message : error.data.message)
+                    })
+            
+                    if(!backendError) navigate('/browse')            
+        }
 
     const validateFields = ()=>{
         if(!isValidEmail(email)) setEmailError(messages.emailInvalid)
@@ -64,19 +69,25 @@ function SignInScreen() {
       }, [emailError, email, password, passError, validateFields])
 
   return (
-    <div className='loginScreen flex justify-center items-center'>
+    <div className='flex min-h-screen min-w-screen justify-center items-center' style={{
+        position: 'relative',
+        background: 'url(https://assets.nflxext.com/ffe/siteui/vlv3/dc1cf82d-97c9-409f-b7c8-6ac1718946d6/14a8fe85-b6f4-4c06-8eaf-eccf3276d557/IN-en-20230911-popsignuptwoweeks-perspective_alpha_website_large.jpg) center no-repeat',
+        backgroundSize: 'cover',
+        objectFit: 'cover',
+        width: '100vw'
+    }}>
         <title> Sign In - Netflix Clone </title>
-        <div className="loginscreen__background">
+        <div className="flex z-0">
             <LazyLoadImage
                 src={netflixLogo}
-                className='loginscreen__logo cursor-pointer'
+                className='fixed left-2 w-40 top-0 md:left-40 md:w-[150px] object-contain cursor-pointer'
                 onClick={()=>navigate('/')}
                 width={200}
             />
-            <div className='loginScreen__gradient' />
         </div>
+        <div className='absolute w-full h-screen z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0.8)]' />
         
-        <div className='flex w-[80vw] px-[5vw] md:w-[50vw] sm:w-[90vw] lg:w-[27vw] h-full py-[2%] rounded-lg bg-bgLogin z-1 justify-center items-center'>
+        <div className='flex w-[80vw] z-1000 px-[5vw] md:w-[50vw] sm:w-[90vw] lg:w-[27vw] h-full py-[2%] rounded-lg bg-bgLogin z-1 justify-center items-center'>
             <div className='flex pt-0 mt-4 justify-start flex-col'>
                 <h1 className='text-4xl mb-4 text-white font-semibold text-left'>
                     Sign In

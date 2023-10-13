@@ -6,6 +6,8 @@ const TVSeasons = ({ show, season }) => {
 
   const { data: seasonDetails } = useGetSeasonDetailsQuery({id: show?.id, season: season})
   console.log(seasonDetails);
+
+  const baseUrl = 'https://image.tmdb.org/t/p/original'
   return (
     <div className="flex flex-wrap w-full my-2 py-4 rounded-2xl ">
         <div className="text-lg py-2">
@@ -14,7 +16,7 @@ const TVSeasons = ({ show, season }) => {
         <div className="flex flex-wrap peer-hover:ring-1">
           { seasonDetails?.episodes?.map((episode, index)=>(
             <div key={episode.episode_number} className="relative rounded-md hover:bg-gray-400 hover:bg-opacity-30 flex w-[100%] lg:w-[50%] p-4 ">
-              <img className="max-w-[50%] w-1/2 sm:w-1/3  md:w-1/3 lg:w-1/3 hover:opacity-80 rounded-md cursor-pointer peer object-cover" src={`https://image.tmdb.org/t/p/original/${episode?.still_path}`} alt="" />
+              <img className="max-w-[50%] w-1/2 sm:w-1/3  md:w-1/3 lg:w-1/3 hover:opacity-80 rounded-md cursor-pointer peer object-cover" src={`${baseUrl}${episode?.still_path}`} alt="" />
               <div className="absolute inset-0 z-2000 hidden peer-hover:flex">
                 <div className="flex items-center justify-center text-center w-1/2 md:w-1/3 lg:1/6">
                   <FontAwesomeIcon className="cursor-pointer" icon={faCirclePlay} size={'2x'}/>

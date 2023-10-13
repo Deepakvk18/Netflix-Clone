@@ -4,15 +4,15 @@ import { apiSlice } from './apiSlice'
 export const moviesApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getMovies: builder.query({
-            query: (query) => (`netflix/shows/${query}`)
+            query: (query) => (`netflix/shows/${query}/`)
         }),
         getMoreMovies: builder.query({
-            query: (query) => (`netflix/moreShows/${query}`)
+            query: (query) => (`netflix/moreShows/${query}/`)
         }),
         searchMoviesOrTV: builder.query({
             query: (args) => {
                 const { query, type } = args
-                return {url: (`netflix/search/${query}/${type}`)}
+                return {url: (`netflix/search/${query}/${type}/`)}
             }
         }),
         getShowDetails: builder.query({

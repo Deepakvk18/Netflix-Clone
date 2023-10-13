@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import genres from '../genres'
 import { useState } from 'react'
 import ShowDetails from './ShowDetails'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 const MovieCard = ({ movie, type }) => {
@@ -38,9 +38,9 @@ const MovieCard = ({ movie, type }) => {
                 <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlus} size='xl'/>
                 <FontAwesomeIcon className='cursor-pointer' icon={faHeart} size={'xl'}/>
               </div>
-              <a href={`/details/${type}/${movie?.id}`}>
+              <Link to={`/details/${type}/${movie?.id}`}>
               <FontAwesomeIcon className='cursor-pointer' icon={faChevronCircleDown} size={'xl'} />
-              </a>
+              </Link>
             </div>
         </div>
     </div>

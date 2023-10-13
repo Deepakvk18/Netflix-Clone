@@ -43,7 +43,7 @@ import {
               <a href='/browse' className='cursor-pointer hover:underline'>Home</a>
           </div>
           { profiles.filter((profile)=>profile.id !== currentProfile.id).map((profile, index) => (
-              <div className='flex items-center'>
+              <div key={index} className='flex items-center'>
                   <img width={35} className='my-1 mr-2 rounded-lg' src={getProfileImgUrl(profile)} alt="profile" /> 
                   <p className='hover:underline cursor-pointer' onClick={()=>{}}>{profile.name}</p>
           </div>
@@ -51,7 +51,7 @@ import {
           <a href='/manageProfiles' className='block cursor-pointer my-2 hover:underline'>Manage Profiles</a>
           <a href='/account' className='block cursor-pointer my-2 hover:underline'>Account</a>
           <p onClick={()=>setMigrateProfile(true)} className='block cursor-pointer my-2 hover:underline'>Transfer Profile</p>
-          <a href='/browse' className='block cursor-pointer my-2 hover:underline'>Help Center</a>
+          <a target="_blank" rel='norefferer' href='https://github.com/Deepakvk18/Netflix-Clone' className='block cursor-pointer my-2 hover:underline'>Help Center</a>
           <div className='border-t-2 border-gray-500 justify-center items-center text-center my-4'>
               <p className='m-2 cursor-pointer hover:underline' onClick={()=>{}}>Sign out of Netflix</p>
           </div>

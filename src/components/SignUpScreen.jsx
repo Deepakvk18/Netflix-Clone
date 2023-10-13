@@ -1,5 +1,4 @@
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import './assets/styles/LoginScreen.css'
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTriangleExclamation, faChevronRight } from '@fortawesome/free-solid-svg-icons'
@@ -41,40 +40,46 @@ function SignUpScreen() {
     
 
   return (
-    <div className='loginScreen'>
+    <div className='max-h-screen min-w-screen' style={{
+        position: 'relative',
+        background: 'url(https://assets.nflxext.com/ffe/siteui/vlv3/dc1cf82d-97c9-409f-b7c8-6ac1718946d6/14a8fe85-b6f4-4c06-8eaf-eccf3276d557/IN-en-20230911-popsignuptwoweeks-perspective_alpha_website_large.jpg) center no-repeat',
+        backgroundSize: 'cover',
+        objectFit: 'cover',
+        width: '100vw'
+    }}>
         <title> Sign Up - Netflix Clone </title>
-        <div className="loginscreen__background">
+        <div className="flex flex-wrap w-[100vw]" >
             <LazyLoadImage
                 src={netflixLogo}
-                className='loginscreen__logo'
+                className='fixed left-2 w-40 z-30 md:left-40 md:w-[150px] object-contain cursor-pointer'
                 onClick={()=>navigate('/')}
             />
-            <button className='loginScreen__button rounded-md font-semibold' onClick={()=>navigate('/login')}>
+            <button className='fixed right-8 md:right-40 z-30 top-7 px-4 py-1 text-white bg-netflixColor rounded-md font-semibold hover:bg-opacity-90' onClick={()=>navigate('/login')}>
                 Sign In
             </button>
-            <div className='loginScreen__gradient' />
+            <div className='relative w-full h-screen z-10 bg-gradient-to-t from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0.8)]' />
         </div>
-        <div className="loginScreen__body">
-            <div>
-                <h1 className='font-bold text-5xl mb-4'>
+        <div className="absolute flex-wrap items-center text-center w-[100vw] top-1/3 z-40 text-white flex justify-center">
+            <div className='block justify-center'>
+                <h1 className='font-bold flex-wrap text-lg lg:text-4xl mb-2'>
                 Unlimited movies, TV shows and more
                 </h1>
 
-                <h2 className='text-2xl mb-5 font-semibold'>
+                <h2 className='text-sm lg:text-2xl mb-3 font-semibold'>
                 Watch anywhere. Cancel anytime.
                 </h2>
 
-                <h3 className='text-md'>
+                <h3 className='text-xs lg:text-xl'>
                     Ready to watch? Enter your email to create or restart your membership.
                 </h3>
 
-                <div className="loginScreen__input p-3 flex-col">
-                    <form className='flex flex-between justify-center text-center items-top'>
+                <div className="p-3 flex-col">
+                    <form className='flex flex-wrap flex-between justify-center text-center items-top'>
                         <div className="relative flex-col text-left">
                             <div>
                                 <input 
                                     type="text" 
-                                    className={`email__input h-14 w-96 p-5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
+                                    className={`bg-transparentBg h-14 w-[80vw] sm:w-96 p-5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
                                     placeholder=" "
                                     value={email}
                                     onChange={(e)=>setEmail((prev)=>e.target.value)}

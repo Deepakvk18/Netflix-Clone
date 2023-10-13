@@ -4,7 +4,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 const ProtectedRoute = () => {
 
-    const auth = localStorage.getItem('userId');
+    const auth = useSelector(selectUser);
+
+    console.log("Private", auth);
 
     return auth ? <Outlet /> : <Navigate to="/login" />;
 }

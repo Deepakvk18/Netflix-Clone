@@ -59,11 +59,11 @@ function Nav({ links, background, searchParams }) {
             { links &&
                 <div className='w-full hidden lg:flex h-10 items-center'>
                     <div className={`justify-between  float-left ${searchBar ? 'mr-32': 'mr-96'}`}>
-                        <a href='/browse' className='nav-links'>Home</a>
-                        <a href='/discover/TV' className='nav-links'>TV Shows</a>
-                        <a href='/discover/Movie' className='nav-links'>Movies</a>
-                        <a href='/discover/Popular' className='nav-links'>New & Popular</a>
-                        <a href='/myList' className='nav-links'>My List</a>
+                        <Link to='/browse' className='nav-links'>Home</Link>
+                        <Link to='/discover/TV' className='nav-links'>TV Shows</Link>
+                        <Link to='/discover/Movie' className='nav-links'>Movies</Link>
+                        <Link to='/discover/Popular' className='nav-links'>New & Popular</Link>
+                        <Link to='/myList' className='nav-links'>My List</Link>
                     </div>
                     { searchBar && 
                         <input
@@ -92,6 +92,41 @@ function Nav({ links, background, searchParams }) {
                             width={20}
                         />
                     </div>
+                </div>
+            }
+            { links &&
+                <div className='flex lg:hidden text-white'>
+                    <div>
+                        <button id="hamburger-button" class="w-8 h-8 m-4 text-white">
+                            {/* <!-- Add your hamburger icon here --> */}
+                        </button>
+                    </div>
+                    <div id="hamburger-menu" class="hidden xl:flex items-center">
+                        <a href="/browse" class="nav-links">Home</a>
+                        <a href="/discover/TV" class="nav-links">TV Shows</a>
+                        <a href="/discover/Movie" class="nav-links">Movies</a>
+                        <a href="/discover/Popular" class="nav-links">New & Popular</a>
+                        <a href="/myList" class="nav-links">My List</a>
+                        <button id="search-button" class="ml-4 text-white">
+                            {/* <!-- Add your search icon here --> */}
+                        </button>
+                        <a class="nav-links ml-4">Children</a>
+                        <button id="bell-button" class="ml-4 text-white">
+                            {/* <!-- Add your bell icon here --> */}
+                        </button>
+                    </div>
+                    <div id="search-bar" class="hidden xl:flex">
+                        <input
+                            class="bg-[#333] text-white rounded-sm h-10 w-64 px-2 py-1 ring-slate-400 ring-2 mr-4"
+                            id="searchBar"
+                            value={searchParams ? searchParams : searchParam}
+                            onChange={(e) => setSearchParam(e.target.value)}
+                            placeholder="Titles, people, genres"
+                            onBlur={() => setSearchBar(false)}
+                            onKeyUp={onKeyUp}
+                        />
+                    </div>
+
                 </div>
                 
             }

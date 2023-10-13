@@ -4,6 +4,7 @@ from requests.exceptions import HTTPError
 import logging
 from flask import request, make_response, jsonify
 from flask_restx import Resource
+from flask_cors import cross_origin
 
 from ..services.authentication import FireBaseAuth
 from ..schemas.auth_schema import (sign_in_model,
@@ -35,7 +36,6 @@ class SignUp(Resource):
         db.session.commit()
         signed_in = make_response(signed_in)
         signed_in.headers['Access-Control-Allow-Credentials'] = True
-        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
         signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
         return (signed_in)
 
@@ -44,10 +44,10 @@ class LogIn(Resource):
 
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error'})
     @auth_api.expect(sign_in_model)
+    @cross_origin(supports_credentials=True)
     # @auth_api.marshal_with(sign_in_output)
     def post(self):
         """Sign in to the Application using email and password"""
-        # Your code to fetch movies goes here
         sign_in = auth_api.payload
         signed_in = firebase.login(sign_in.get('email'), sign_in.get('password'))
         refresh = signed_in.get('refreshToken')
@@ -55,10 +55,11 @@ class LogIn(Resource):
         id_token = signed_in.get('idToken')
         refresh = signed_in.get('refreshToken')
         signed_in = make_response(signed_in)
-        signed_in.headers['Access-Control-Allow-Credentials'] = True
         signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
+        signed_in.headers['Authorization'] = f'Bearer {id_token}'
         signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
-        return (signed_in)
+        print(signed_in.headers)
+        return (signed_in.get_json())
 
 @auth_api.route('/verifyIdentity')
 class Identity(Resource):
@@ -77,13 +78,12 @@ class Refresh(Resource):
     
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
     @auth_api.doc(security='jsonWebToken')
-    @firebase.jwt_required
     @auth_api.marshal_with(refresh_output)
     def get(self):
         """Get the new access token of the user given a refresh token"""
-        info = firebase.get_user()
         new_info = firebase.refresh()
-        return {'email': info.get('email'), 'idToken': new_info.get('idToken'), 'localId': info.get('localId'), 'refreshToken': new_info.get('refreshToken')}
+        print('Inside Refresh Method')
+        return {'email': new_info.get('email'), 'idToken': new_info.get('idToken'), 'localId': new_info.get('localId'), 'refreshToken': new_info.get('refreshToken')}
 
 @auth_api.route('/logout')
 class Logout(Resource):

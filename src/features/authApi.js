@@ -3,11 +3,17 @@ import { apiSlice } from './apiSlice';
 export const authApi = apiSlice.injectEndpoints({
 
     endpoints: (builder) => ({
-        login: builder.query({
-            query: (url) => ({ url: url })
+        login: builder.mutation({
+            query: (body) => ({ 
+                url: '/auth/signin',
+                method: 'POST',
+                body: body
+             })
         }),
         logout: builder.query({
-            
+            query: () => ({
+                url: '/auth/logout'
+            })
         }),
         refresh: builder.query({
             query: ()=> ({ 
@@ -15,15 +21,19 @@ export const authApi = apiSlice.injectEndpoints({
             })
         }),
         verifyIdentity: builder.query({
-
+            query: () => 'auth/verifyIdentity'
         }),
         signUp: builder.mutation({
-
+            query: (body) => ({
+                url: '/auth/signup',
+                method: 'POST',
+                body: body
+            })
         })
     })
 })
 
-export const { useLoginQuery, 
+export const { useLoginMutation, 
                 useLogoutQuery, 
                 useSignUpMutation, 
                 useRefreshQuery, 
