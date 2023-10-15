@@ -4,7 +4,6 @@ from flask_restx import Resource, fields
 import os
 import requests
 from dotenv import load_dotenv
-from flask_cors import cross_origin
 from ..services.authentication import firebase 
 
 load_dotenv()
@@ -117,3 +116,10 @@ class GetShowVideos(Resource):
         """Get videos of a particular show"""
         url = f'{API_BASE_URL}/{type}/{show_id}/videos?api_key={API_KEY}&append_to_response=video'
         return return_api_response(url)
+    
+def get_show_details(show_id, type):
+    url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'
+    return return_api_response(url)
+
+def get_recommendations(likes):
+    pass

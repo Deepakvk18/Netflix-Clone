@@ -3,7 +3,7 @@ from flask_restx import Namespace
 authorizations = {
     'jsonWebToken': {
         "type": 'apiKey',
-        'in': 'cookie',
+        'in': 'header',
         'name': 'Authorization'
     }
 }

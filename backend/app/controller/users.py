@@ -10,6 +10,7 @@ from ..exceptions.custom_exceptions import UserException
 from ..extensions import db
 from ..schemas.user_schema import signup_input, signup_output, plans_output
 from ..services.authentication import firebase
+from .payments import delete_customer
 
 @user_api.route('/signup')
 class SignUpEmail(Resource):
@@ -44,10 +45,12 @@ class DeleteUser(Resource):
         """Delete the user account from the database"""
         user_id = firebase.get_user().get('localId')
         delete = firebase.delete()
+
         if delete:
             user = User.query.filter_by(uuid=user_id).first()
             if not user:
                 raise UserException(message='NO_USER_FOUND')
+            delete_customer(user.email)
             user.plan = 2
             db.session.commit()
         return {'message': 'User Deleted Successfully!!'}

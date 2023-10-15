@@ -36,7 +36,7 @@ class FireBaseAuth:
     def signup(self, email, password):
         return self.auth.create_user_with_email_and_password(email, password)
 
-    def delete(self, token):
+    def delete(self):
         return self.auth.delete_user_account(self.get_token())
 
     def send_verification(self, token):

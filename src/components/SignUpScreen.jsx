@@ -28,7 +28,6 @@ function SignUpScreen() {
          } catch(error){
 
          }
-
     }
 
     useEffect(() => {
@@ -57,7 +56,7 @@ function SignUpScreen() {
             <button className='fixed right-8 md:right-40 z-30 top-7 px-4 py-1 text-white bg-netflixColor rounded-md font-semibold hover:bg-opacity-90' onClick={()=>navigate('/login')}>
                 Sign In
             </button>
-            <div className='relative w-full h-screen z-10 bg-gradient-to-t from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0.8)]' />
+            <div className='relative w-full h-screen z-10 bg-gradient-to-t from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.8)]' />
         </div>
         <div className="absolute flex-wrap items-center text-center w-[100vw] top-1/3 z-40 text-white flex justify-center">
             <div className='block justify-center'>
@@ -79,7 +78,7 @@ function SignUpScreen() {
                             <div>
                                 <input 
                                     type="text" 
-                                    className={`bg-transparentBg h-14 w-[80vw] sm:w-96 p-5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'ring-netflixColor ring-1'} ${email && !emailError && 'ring-green-400 ring-1'}`}
+                                    className={`bg-transparentBg h-14 w-[80vw] sm:w-96 p-5 mb-2 pt-4 mr-2 text-sm text-white rounded-sm focus:border-white focus:ring-1 focus:ring-white ring-gray-500 ring-1 peer ${emailError && 'ring-netflixColor '} ${email && !emailError && 'ring-green-400'}`}
                                     placeholder=" "
                                     value={email}
                                     onChange={(e)=>setEmail((prev)=>e.target.value)}

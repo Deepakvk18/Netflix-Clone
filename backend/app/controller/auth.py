@@ -34,10 +34,8 @@ class SignUp(Resource):
         user = User.query.filter_by(email=sign_up.get('email')).first()
         user.uuid = signed_in.get('localId')
         db.session.commit()
-        signed_in = make_response(signed_in)
-        signed_in.headers['Access-Control-Allow-Credentials'] = True
-        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
-        return (signed_in)
+        signed_in = sign_in(sign_up.get('email'), sign_up.get('password'))
+        return (signed_in.get_json())
 
 @auth_api.route('/signin')
 class LogIn(Resource):
@@ -48,17 +46,8 @@ class LogIn(Resource):
     # @auth_api.marshal_with(sign_in_output)
     def post(self):
         """Sign in to the Application using email and password"""
-        sign_in = auth_api.payload
-        signed_in = firebase.login(sign_in.get('email'), sign_in.get('password'))
-        refresh = signed_in.get('refreshToken')
-        db.session.commit()
-        id_token = signed_in.get('idToken')
-        refresh = signed_in.get('refreshToken')
-        signed_in = make_response(signed_in)
-        signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
-        signed_in.headers['Authorization'] = f'Bearer {id_token}'
-        signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
-        print(signed_in.headers)
+        sign_in_payload = auth_api.payload
+        signed_in = sign_in(sign_in_payload.get('email'), sign_in_payload.get('password'))
         return (signed_in.get_json())
 
 @auth_api.route('/verifyIdentity')
@@ -94,14 +83,21 @@ class Logout(Resource):
     # @auth_api.marshal_with(message_output)
     def delete(self):
         """Destroys Refresh token & Acces token from cookies once the user is logged out"""
-
         # Destroy both the refresh token and accesss token once the user is logged out
-
-
         response = make_response(jsonify({'message': 'User Logged out Successfully'}))
         response.set_cookie('access_token', '', expires=0, httponly=True)
         response.set_cookie('refresh_token', '', expires=0, httponly=True)
         return response
 
 
-        
+def sign_in(email, password):
+    """Method to sign in to the firebase account"""
+    signed_in = firebase.login(email, password)
+    refresh = signed_in.get('refreshToken')
+    id_token = signed_in.get('idToken')
+    refresh = signed_in.get('refreshToken')
+    signed_in = make_response(signed_in)
+    signed_in.set_cookie('access_token', value=id_token, domain=constants.FRONTEND, httponly=True, max_age=3500)
+    signed_in.headers['Authorization'] = f'Bearer {id_token}'
+    signed_in.set_cookie('refresh_token', value=refresh, domain=constants.FRONTEND, httponly=True, max_age=2560000)
+    return signed_in

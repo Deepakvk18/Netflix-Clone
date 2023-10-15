@@ -10,7 +10,7 @@ class User(db.Model):
 
 class Plans(db.Model):
     
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(32), primary_key=True)
     plan = db.Column(db.String(255))
     price = db.Column(db.Float)
     description = db.Column(db.String(255))

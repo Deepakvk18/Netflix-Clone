@@ -13,7 +13,9 @@ class Ratings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     show_id = db.Column(db.Integer)
     profile_id = db.Column(db.Integer)
+    type = db.Column(db.String(8))
     rating = db.Column(db.String(8))
+
 
 class MyList(db.Model):
     id = db.Column(db.Integer, primary_key=True)

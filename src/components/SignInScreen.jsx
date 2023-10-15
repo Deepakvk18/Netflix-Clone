@@ -85,7 +85,7 @@ function SignInScreen() {
                 width={200}
             />
         </div>
-        <div className='absolute w-full h-screen z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0)] to-[rgba(0,0,0,0.8)]' />
+        <div className='absolute w-full h-screen z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.8)]' />
         
         <div className='flex w-[80vw] z-1000 px-[5vw] md:w-[50vw] sm:w-[90vw] lg:w-[27vw] h-full py-[2%] rounded-lg bg-bgLogin z-1 justify-center items-center'>
             <div className='flex pt-0 mt-4 justify-start flex-col'>
@@ -103,12 +103,13 @@ function SignInScreen() {
                         <div>
                             <input 
                                 type="text" 
+                                id='email-input'
                                 className={`h-12 w-full mt-2 mb-2 bg-inputBg p-4 pb-2.5 pt-4 mr-2 text-sm text-white rounded-md focus:border-white focus:ring-1 focus:ring-white peer ${emailError && 'border-b-2 border-b-errorText ring-0'}`}
                                 placeholder=" "
                                 value={email}
                                 onChange={(e)=>setEmail((prev)=>e.target.value)}
                             />
-                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-5 left-1 peer-focus:font-bold">                                
+                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-90 peer-focus:-translate-y-5 left-1 peer-focus:font-bold cursor-text" onClick={()=>document.getElementById('email-input').focus()}>                                
                             Email address
                             </label>
                         </div>
@@ -124,12 +125,13 @@ function SignInScreen() {
                         <div>
                             <input 
                                 type="password" 
+                                id='password-input'
                                 className={`h-12 w-full mt-4 mb-2 bg-inputBg p-4 pb-2.5 pt-4 mr-2 text-sm text-white rounded-md focus:border-white focus:ring-1 focus:ring-white peer ${passError &&  'border-b-2 border-b-errorText ring-0'}`}
                                 placeholder=" "
                                 value={password}
                                 onChange={(e)=>setPassword((prev)=>e.target.value)}
                             />
-                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-3 peer-focus:scale-90 peer-focus:-translate-y-4 left-1 peer-focus:font-bold">                                
+                            <label className="absolute text-md text-inputPH p-4 duration-300 transform -translate-y-4 scale-90 top-2 z-10 origin-[0] px-4 peer-focus:px-4 peer-placeholder-shown:scale-90 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-3 peer-focus:scale-90 peer-focus:-translate-y-4 left-1 peer-focus:font-bold cursor-text" onClick={()=>document.getElementById('password-input').focus()}>                                
                                 Password
                             </label>
                         </div>

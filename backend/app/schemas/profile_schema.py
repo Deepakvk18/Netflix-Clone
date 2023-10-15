@@ -15,6 +15,13 @@ rating_model = profile_api.model('Rating', {
     'rating': fields.String(description='Rating', max_length=8)
 })
 
+profile = profile_api.model('Profile', {
+    'profile': fields.Nested(profile_model, description='Profile'),
+    'ratings': fields.List(fields.Nested(rating_model, description='Ratings')),
+    'myList': fields.List(fields.Nested(rating_model, description='My List')),
+    'nowWatching': fields.List(fields.Nested(rating_model, description='Now Watching')),
+})
+
 message_output = profile_api.model('Message Output', {
     'message': fields.String(description='Success message')
 })
@@ -27,16 +34,19 @@ addprofile_input = profile_api.model('Add Profile', model={
 
 migrateprofile_input = profile_api.model('Migrate Profile', model={
     'profileId': fields.Integer(description="Profile ID to be migrated"),
-    'toUserId': fields.String(description="User ID to whom the profile is to be migrated"),
+    'email': fields.String(description="Email of the user to whom the profile is to be migrated"),
+    'password': fields.String(description="Password of the user to whom the profile is to be migrated"),
 })
 
 like_input = profile_api.model('Like/Dislike/Love Show', model={
     'showId': fields.Integer(description="Show ID to be liked"),
     'profileId': fields.Integer(description="Profile ID who likes the show"),
+    'type': fields.String(description="Type of Show (tv/movie)"),
     'ratingId': fields.Integer(description="Rating ID of the action"),
 })
 
 mylist_input = profile_api.model('Add to My List', model={
     'showId': fields.Integer(description="Show ID to be added"),
+    'type': fields.String(description="Type of Show (tv/movie)"),
     'profileId': fields.Integer(description="Profile ID who added the show to my list"),
 })
