@@ -45,7 +45,7 @@ code {
 
 @layer components {
   .nav-links {
-    @apply text-white text-sm  mx-2 hover:text-gray-400 transition-all ease-in-out delay-150 duration-500
+    @apply text-white text-lg  mx-2 hover:text-gray-400 transition-all ease-in-out delay-150 duration-500
   }
   .app {
     @apply bg-[#111] w-[100vw]

@@ -46,7 +46,7 @@ import { useLogoutMutation } from "../features/authApi";
     return (
       <Popover open={openPopover} handler={setOpenPopover}>
         <PopoverHandler {...triggers}>
-        <div className='fixed flex right-20 group items-center cursor-pointer'>
+        <div className='fixed flex top-4 right-2 sm:right-10 group items-center cursor-pointer'>
                   <img
                       className='rounded-md cursor-pointer'
                       src={getProfileImgUrl(currentProfile)}

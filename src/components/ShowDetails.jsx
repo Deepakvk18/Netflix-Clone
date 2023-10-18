@@ -1,13 +1,18 @@
 import { useParams } from "react-router-dom"
 import Nav from "./Nav"
 import { useGetShowDetailsQuery } from "../features/moviesApi"
-import { faCirclePlay, faCirclePlus, faHeart, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons'
+import { faCirclePlay, faCirclePlus, faThumbsUp, faThumbsDown, faCircleCheck, faHeart, faChevronCircleDown, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import genres from '../genres'
 import { useNavigate } from "react-router-dom"
 import Recommendations from "./Recommendations"
 import { useState } from "react"
 import TVSeasons from "./TVSeasons"
+import { useSelector } from 'react-redux'
+import { addToNowWatching, removeFromNowWatching, selectDisLikes, selectLikes, selectMyList, selectNowWatching } from '../features/userSlice'
+import { selectCurrentProfile } from '../features/userSlice'
+import { useDispatch } from 'react-redux'
+import { addToDislikes, addToLikes, addToMyList } from '../features/userSlice'
+import { useUpdateLikesMutation, useUpdateMyListMutation, useUpdateNowWatchingMutation, useGetCurrentEpisodeMutation } from '../features/profileApi'
 
 const ShowDetails = () => {
   const baseurl = 'https://image.tmdb.org/t/p/original/'
@@ -16,6 +21,95 @@ const ShowDetails = () => {
   const { data: show } = useGetShowDetailsQuery({type, id: showId})
   const navigate = useNavigate()
   const [season, setSeason] = useState(1)
+
+  const profile = useSelector(selectCurrentProfile)
+  var [liked, setLiked] = useState(useSelector(selectLikes)?.includes(show?.id))
+  var [disliked, setDisliked] = useState(useSelector(selectDisLikes)?.includes(show?.id))
+  var [myList, setMyList] = useState(useSelector(selectMyList)?.includes(show?.id))
+  var [nowWatching, setNowWatching] = useState(useSelector(selectNowWatching)?.includes(show?.id))
+  const [updateLikesApi] = useUpdateLikesMutation()
+  const [updateMyListApi] = useUpdateMyListMutation()
+  const [updateNowWatchingApi] = useUpdateNowWatchingMutation()
+  const [currentEpisodeApi] = useGetCurrentEpisodeMutation()
+
+  const dispatch = useDispatch()
+
+  const optimisticLike = (rating)=>{
+    if (rating === 1){
+      setLiked((prev)=>!prev)
+      dispatch(addToLikes(show?.id))
+      if (disliked){
+        setDisliked((prev)=>!prev)
+        dispatch(addToDislikes(show?.id))
+      }
+    } else {
+      setDisliked((prev)=>!prev)
+      dispatch(addToDislikes(show?.id))
+      if (liked){
+        setLiked((prev)=>!prev)
+        dispatch(addToLikes(show?.id))
+      }
+    }
+  }
+
+  const rate = (rating)=>{
+    console.log("Rate");
+    optimisticLike(rating)
+    updateLikesApi({profileId: profile?.id, showId: show?.id, type:type, rating: rating})
+      .unwrap()
+      .then((res)=>{
+        console.log(res);
+      })
+      .catch((err)=>{
+        console.error(err)
+        optimisticLike(rating)
+      })
+  }
+
+  const onPlay = (e)=>{
+    currentEpisodeApi({profileId: profile?.id, showId: show?.id, type: type})
+      .unwrap()
+      .then((res)=>{
+        e.preventDefault()
+        dispatch(addToNowWatching(show?.id))
+        navigate(`/watch/${type}/${show?.id}?tracking_id=${res?.id}`)
+      })
+      .catch((err)=>{console.error(err)})
+    
+  }
+
+  const updateNowWatching = (e)=>{
+    e.preventDefault()
+    setNowWatching((prev)=>!prev)
+    dispatch(removeFromNowWatching(show?.id))
+    updateNowWatchingApi({profileId: profile?.id, showId: show?.id, type: type})
+          .unwrap()
+          .then((res)=>{
+            console.log(res);
+          })
+          .catch((err)=>{
+            dispatch(addToNowWatching(show?.id))
+            setNowWatching((prev)=>!prev)
+            console.error(err)
+          })
+  }
+
+  const updateMylist = (e)=>{
+    e.preventDefault()
+    setMyList((prev)=>!prev)
+    dispatch(addToMyList(show?.id))
+    updateMyListApi({profileId: profile?.id, showId: show?.id, type: type})
+          .unwrap()
+          .then((res)=>{
+            console.log(res);
+            dispatch(addToMyList(show?.id))
+          })
+          .catch((err)=>{
+            dispatch(addToMyList(show?.id))
+            setMyList((prev)=>!prev)
+            console.error(err)
+          })
+  }
    
 
   return (
@@ -41,10 +135,42 @@ const ShowDetails = () => {
                     </p>
                     
                     <div className="block mt-4">
-                    <div className='flex items-center text-4xl justify-between mb-4 lg:w-[50%]'>
-                        <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlay} size={'xl'}/>
-                        <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlus} size='xl'/>
-                        <FontAwesomeIcon className='cursor-pointer' icon={faHeart} size={'xl'}/>
+                    <div className='flex items-center text-4xl justify-between mb-4 lg:w-[70%]'>
+                      <FontAwesomeIcon 
+                        className='cursor-pointer' 
+                        icon={faCirclePlay} 
+                        size={'xl'} 
+                        onClick={onPlay}
+                      />
+
+                      { myList ? (
+                        <FontAwesomeIcon 
+                          className='cursor-pointer' 
+                          icon={faCircleCheck} 
+                          size='xl' 
+                          onClick={updateMylist}
+                        /> ) : ( 
+                        <FontAwesomeIcon 
+                          className='cursor-pointer' 
+                          icon={faCirclePlus} 
+                          size='xl' 
+                          onClick={updateMylist}
+                        /> ) }
+
+                      <FontAwesomeIcon 
+                        className='cursor-pointer' 
+                        icon={faThumbsUp} 
+                        size={'xl'}
+                        onClick={()=>rate(1)}
+                        style={{ color: liked && '#e50914' }}
+                      />
+                      <FontAwesomeIcon 
+                        className='cursor-pointer' 
+                        icon={faThumbsDown} 
+                        size={'xl'}
+                        onClick={()=>rate(-1)}
+                        style={{ color: disliked && '#e50914' }}
+                      />
                     </div>
                   </div>
                   </div>
