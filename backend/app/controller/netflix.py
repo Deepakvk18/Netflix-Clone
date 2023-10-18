@@ -5,6 +5,8 @@ import os
 import requests
 from dotenv import load_dotenv
 from ..services.authentication import firebase 
+import random
+from functools import reduce
 
 load_dotenv()
 API_KEY = os.getenv('TMDB_API_KEY')
@@ -30,7 +32,6 @@ def return_api_response(url):
     headers = {"accept": "application/json"}
 
     response = requests.get(url, headers=headers)
-    print(response)
     return response.json()
 
 
@@ -43,7 +44,6 @@ class Shows(Resource):
     def get(self, query):
         """Get a list of movies via query"""
         url = f"{API_BASE_URL}/{api_requests.get(query)}"
-        print(url)
         return return_api_response(url)
 
 @netflix_api.route('/moreShows/<query>/')
@@ -81,7 +81,6 @@ class GetMovieOrTVRecommendations(Resource):
     def get(self, type, show_id):
         """Get Recommendations for a particular show id and page number"""
         url = f'{API_BASE_URL}/{type}/{show_id}/recommendations?api_key={API_KEY}'
-        print(url)
         return return_api_response(url)
 
 @netflix_api.route('/details/<type>/<int:show_id>')
@@ -95,7 +94,7 @@ class GetMovieOrTVDetails(Resource):
         url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'
         return return_api_response(url)
 
-@netflix_api.route('/season/<int:show_id>/<season_no>')
+@netflix_api.route('/season/<int:show_id>/<int:season_no>')
 class GetTVSeasonDetails(Resource):
 
     @netflix_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
@@ -104,6 +103,17 @@ class GetTVSeasonDetails(Resource):
     def get(self, show_id, season_no):
         """Get season details of a particular show"""
         url = f'{API_BASE_URL}/tv/{show_id}/season/{season_no}?api_key={API_KEY}'
+        return return_api_response(url)
+
+@netflix_api.route('/season/<int:show_id>/<int:season_no>/<int:episode_no>')
+class GetTVSeasonEpisodeDetails(Resource):
+
+    @netflix_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    @netflix_api.doc(security="jsonWebToken")
+    @firebase.jwt_required
+    def get(self, show_id, season_no, episode_no):
+        """Get season details of a particular show"""
+        url = f'{API_BASE_URL}/tv/{show_id}/season/{season_no}/episode/{episode_no}?api_key={API_KEY}'
         return return_api_response(url)
 
 @netflix_api.route('/videos/<type>/<int:show_id>')
@@ -117,9 +127,42 @@ class GetShowVideos(Resource):
         url = f'{API_BASE_URL}/{type}/{show_id}/videos?api_key={API_KEY}&append_to_response=video'
         return return_api_response(url)
     
-def get_show_details(show_id, type):
+def get_show_details(show_id, type, rating=None):
     url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'
-    return return_api_response(url)
+    show_details = return_api_response(url)
+    show_details['type'] = type
+    if (rating):
+        show_details['rating'] = rating
+    return show_details
 
 def get_recommendations(likes):
-    pass
+    shows = []
+    ids = set()
+    for show in likes:
+        url = f'{API_BASE_URL}/{show.type}/{show.id}/recommendations?api_key={API_KEY}'
+        recommendations = return_api_response(url)
+        if len(recommendations.get('results')) > 10:    
+            results = random.choices(recommendations.get('results'), k=10)
+            res = []
+            for result in results:
+                result['type'] = show.type
+                if result.get('id') not in ids:
+                    ids.add(result.get('id'))
+                    res.append(result)
+            shows.extend(res)
+        else:
+            results = recommendations.get('results')
+            res = []
+            for result in results:
+                result['type'] = show.type
+                if result.get('id') not in ids:
+                    ids.add(result.get('id'))
+                    res.append(result)
+            shows.extend(res) 
+    if len(shows) < 15:
+        return shows
+    return random.choices(shows, k=15)
+
+def get_movie_details(show_id, type):
+    url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'
+    return return_api_response(url)

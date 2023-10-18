@@ -1,9 +1,14 @@
-import profiles from "../utils/profiles"
 import { useState, useEffect } from "react"
 import { isValidEmail, isValidPassword } from "../utils/validator"
 import messages from "../utils/messages"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons"
+import { selectProfiles } from "../features/userSlice"
+import { useSelector } from "react-redux"
+import { useMigrateProfileMutation } from "../features/profileApi"
+import { useDispatch } from "react-redux"
+import { login } from "../features/userSlice"
+import { useNavigate } from "react-router-dom"
 
 const MigrateProfile = ({ setMigrateProfile }) => {
 
@@ -13,6 +18,29 @@ const MigrateProfile = ({ setMigrateProfile }) => {
     const [passError, setPassError] = useState('')
     const [password, setPassword] = useState('')
     const [backendError, setBackendError] = useState('')
+    const profiles = useSelector(selectProfiles)
+    const migrateProfile = useMigrateProfileMutation()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    
+    const migrateClick = (e)=>{
+        e.preventDefault()
+        if(!isValidEmail(email) || !isValidPassword(password)) return
+        // API Call
+        migrateProfile({ profile, email, password })
+            .unwrap()
+            .then((originalPromiseResult)=>{
+                console.log("Profile Migrated", originalPromiseResult);
+                setMigrateProfile(false)
+                dispatch(logout())
+                dispatch(login({ idToken: originalPromiseResult.idToken, user: originalPromiseResult.user, profiles: originalPromiseResult.profiles }))
+                navigate('/profiles')
+                })
+            .catch((error)=>{
+                console.log("Error", error);
+                setBackendError(error?.data?.message)
+                })
+    }
 
     const validateFields = ()=>{
         if(!isValidEmail(email)) setEmailError(messages.emailInvalid)
@@ -95,7 +123,7 @@ const MigrateProfile = ({ setMigrateProfile }) => {
             </div>
             
                 <div className='flex-row'>
-                    <button className='px-8 m-4 py-3 text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={()=>{}}>
+                    <button className='px-8 m-4 py-3 text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={migrateClick}>
                         Migrate
                     </button>
                     <button className='my-10 m-4 mx-auto px-8 text-xl py-3 cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={()=>setMigrateProfile(false)}>

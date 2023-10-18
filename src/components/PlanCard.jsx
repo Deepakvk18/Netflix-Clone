@@ -6,12 +6,12 @@ const PlanCard = ({ data, changePlan, currentPlan, currentSubscription }) => {
     const [active, setActive] = useState(false)
 
     const handleClick = () => {
-        changePlan(data.id)
+        changePlan(data.default_price)
         setActive(!active)
     }
 
     useEffect(() => {
-        if (currentPlan === data.id) {
+        if (currentPlan === data.default_price) {
             setActive(true)
         } else {
             setActive(false)
@@ -19,11 +19,11 @@ const PlanCard = ({ data, changePlan, currentPlan, currentSubscription }) => {
     }, [currentPlan])
 
   return (
-    <div className={`mb-4 m-4 lg:max-w-[21%] md:w-[45%] w-full cursor-default pt-8 justify-center ${active ? 'text-netflixColor': 'bg-white'}`} >
+    <div className={`mb-4 m-4 lg:max-w-[21%] md:w-[45%] w-full cursor-default pt-8 justify-center  ${active ? 'text-netflixColor': 'bg-white'}`} >
         <div className="block rounded-md h-[100%] bg-white ring-netflixColor ring-1" onClick={handleClick}>
-            <div className={`p-2 flex flex-wrap flex-col justify-center items-center ${active && 'bg-netflixMsgColor text-white'} ${currentSubscription?.id === data.id ? 'bg-black text-white' : ''}`}>
+            <div className={`p-2 flex flex-wrap flex-col justify-center items-center ${active && 'bg-netflixMsgColor text-white'} ${currentSubscription === data.default_price ? 'bg-black text-white' : ''}`}>
                     <h2 className="text-4xl my-2 font-semibold">
-                        {data?.name} <span className="text-sm">{ currentSubscription?.id === data.id && '(Current)'}</span>
+                        {data?.name} <span className="text-sm">{ currentSubscription === data.default_price && '(Current)'}</span>
                     </h2>
                     <h3 className="text-2xl">
                     ₹ {'199'} /Month

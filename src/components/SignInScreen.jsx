@@ -20,7 +20,7 @@ function SignInScreen() {
     const [backendError, setBackendError] = useState("")
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const [loginMutation, mutationResult] = useLoginMutation()
+    const [loginMutation] = useLoginMutation()
 
     const onSubmit = async (e)=>{
             e.preventDefault()
@@ -42,17 +42,16 @@ function SignInScreen() {
 
             await loginMutation({ email, password })
                     .unwrap()
-                    .then((payload)=> {
-                        dispatch(login(payload))
+                    .then(async (payload)=> {
                         console.log(payload);
-                        // navigate('/browse')
+                        await dispatch(login(payload))
+                        navigate('/profiles')
                     })
                     .catch((error)=>{
                         console.error(error);
                         setBackendError(error.response ? error.response.data.message : error.data.message)
                     })
-            
-                    if(!backendError) navigate('/browse')            
+           
         }
 
     const validateFields = ()=>{

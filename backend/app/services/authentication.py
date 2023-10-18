@@ -59,7 +59,6 @@ class FireBaseAuth:
 
     @staticmethod
     def get_token():
-        print (request.headers)
         try:
             jwt = request.headers.get('Authorization').split()[1]
 

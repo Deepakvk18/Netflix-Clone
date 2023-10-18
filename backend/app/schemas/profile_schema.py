@@ -1,13 +1,13 @@
 from ..controller import profile_api
 from flask_restx import fields
 
-profile_model = profile_api.model('Profile', {
-    'id': fields.Integer(description='Profile ID'),
-    'userId': fields.String( attribute='user_id', description='User ID'),
-    'language': fields.String(description='Language', max_length=32),
-    'name': fields.String(description='Profile Name', max_length=32),
-    'children': fields.Boolean(description='Children Profile?')
-})
+profile_model = profile_api.model('Profile', {})
+#     'id': fields.Integer(description='Profile ID'),
+#     'userId': fields.String( attribute='user_id', description='User ID'),
+#     'language': fields.String(description='Language', max_length=32),
+#     'name': fields.String(description='Profile Name', max_length=32),
+#     'children': fields.Boolean(description='Children Profile?')
+# })
 
 rating_model = profile_api.model('Rating', {
     'showId': fields.Integer(attribute='show_id', description='Show ID'),
@@ -32,6 +32,12 @@ addprofile_input = profile_api.model('Add Profile', model={
     'language': fields.String(description="Language of the profile")
 })
 
+editprofile_input = profile_api.model('Edit Profile', model={
+    'id': fields.Integer(description="Profile ID to be edited"),
+    'name': fields.String(description="New Name of the new profile"),
+    'children': fields.Boolean(description="Whether this profile is a children's profile"),
+})
+
 migrateprofile_input = profile_api.model('Migrate Profile', model={
     'profileId': fields.Integer(description="Profile ID to be migrated"),
     'email': fields.String(description="Email of the user to whom the profile is to be migrated"),
@@ -49,4 +55,19 @@ mylist_input = profile_api.model('Add to My List', model={
     'showId': fields.Integer(description="Show ID to be added"),
     'type': fields.String(description="Type of Show (tv/movie)"),
     'profileId': fields.Integer(description="Profile ID who added the show to my list"),
+})
+
+current_episode = profile_api.model('Get Current Episode Input', model={
+    'profileId': fields.Integer(description="Profile ID who is watching the show"),
+    'type': fields.String(description="Type of Show (tv/movie)"),
+    'showId': fields.Integer(description="Show ID to be added"),
+
+})
+
+current_episode_output = profile_api.model('Get Current Episode Output', model={
+    'id': fields.Integer(description="Tracking ID"),
+    'showId': fields.Integer(attribute='show_id', description="Show ID"),
+    'type': fields.String(description="Type of Show (tv/movie)"),
+    'season': fields.Integer(description="Current Season"),
+    'episode': fields.Integer(description="Current Episode"),
 })

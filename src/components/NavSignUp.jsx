@@ -5,18 +5,20 @@ import { selectEmail } from '../features/userSlice'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/userSlice'
+import { useLogoutMutation } from '../features/authApi'
 
 const NavSignUp = () => {
 
     const navigate = useNavigate()
     const email = useSelector(selectEmail);
     const dispatch = useDispatch()
+    const [logoutApi] = useLogoutMutation()
 
     const handleLogout = (e) => {
         e.preventDefault()
+        logoutApi()
         dispatch(logout())
-        localStorage.removeItem('user')
-        navigate('/')
+        navigate('/login')
     }
 
   return (

@@ -16,8 +16,6 @@ const ShowDetails = () => {
   const { data: show } = useGetShowDetailsQuery({type, id: showId})
   const navigate = useNavigate()
   const [season, setSeason] = useState(1)
-
-  console.log(showId, type);
    
 
   return (
@@ -31,7 +29,7 @@ const ShowDetails = () => {
             alt="show-banner" 
             className="object-contain rounded-md w-[100%]"
           />
-          <div className= 'absolute inset-0 z-10 bg-gradient-to-b from-transparent to-[#111] object-cover'/>
+          <div className= 'absolute inset-0 z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.8)] object-cover'/>
             <div className='absolute inset-0 z-30 px-4 lg:px-24 md:px-16 top-1/4  md:top-1/4 lg:top-[20%] bg-gradient-to-b from-transparent to-[#111] items-center mr-4'>
               <p className='line-clamp-1 my-2 text-4xl'>{show?.title || show?.name || show?.original_name} { show?.next_episode_to_air && <p className="text-xl text-white">Next Episode on <span>{show?.next_episode_to_air?.air_date}</span></p> }</p>
               <div className='flex flex-wrap mt-2'>

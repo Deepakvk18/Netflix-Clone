@@ -1,11 +1,28 @@
 import React from 'react'
 import NavSignUp from './NavSignUp'
+import { useCheckOutMutation } from '../features/paymentsApi'
 
 const Payment = () => {
 
-    const submit = (e) => {
+    const priceId =  new URLSearchParams(window.location.search).get('plan')
+    const [checkoutMutation] = useCheckOutMutation()
+
+    const submit = async(e) => {
         e.preventDefault()
+        await checkoutMutation({ priceId })
+            .unwrap()
+            .then((res)=>{
+                console.log(res);
+                window.open(res.url, '_blank')
+            })
+            .catch((error)=>{
+                console.error(error);
+            })
     }
+
+    
+
+
   return (
     <section className='absolute inset-0 w-full bg-white block'>
         <title> Subscribe - Netflix Clone </title>

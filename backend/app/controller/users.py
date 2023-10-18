@@ -30,7 +30,6 @@ class SignUpEmail(Resource):
             db.session.add(user)
         else:
             user.plan = 1
-            user.subscribed_at = datetime.datetime.now()
         db.session.commit()
         return {'message': 'User Signed Up Successfully!!'}
 
@@ -68,6 +67,8 @@ class ChangePlan(Resource):
         user = User.query.filter_by(uuid=user_id).first()
         if not user:
             raise UserException('USER_NOT_FOUND')
+        if (user.plan != 1 and user.plan !=2 and plan_id != 1 and plan_id != 2):
+            user.subscribed_at = datetime.datetime.now()
         user.plan = plan_id
         db.session.commit()
         return {'message': 'User"s plan changed'}
@@ -81,3 +82,7 @@ class GetAllPlans(Resource):
         """Get all the data of plans"""
         plans = Plans.query.all()
         return plans
+
+def get_plan(plan_id):
+    plan = Plans.query.filter_by(id=plan_id).first()
+    return plan

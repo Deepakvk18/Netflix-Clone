@@ -11,6 +11,7 @@ import { login } from '../features/userSlice'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { selectEmail } from '../features/userSlice'
 import NavSignUp from './NavSignUp'
+import { useSignUpMutation } from '../features/authApi'
 
 const PasswordScreen = () => {
 
@@ -20,6 +21,7 @@ const PasswordScreen = () => {
     const [backendError, setBackendError] = useState("")
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    const [signUpMutation] = useSignUpMutation()
 
     const onSubmit = async (e)=>{
         e.preventDefault()
@@ -31,17 +33,19 @@ const PasswordScreen = () => {
         if(passError) return;
 
         setPassError('')
-        try{
-            const res = await axios.post(backend + '/auth/signin', { email: email, password: password })
-            dispatch(login(res.data))
-            localStorage.setItem('user', res.data)
-            console.log(localStorage.getItem('user'))
-            console.log(res.data);
-            navigate('/browse')
-        } catch (error){
-            setBackendError(error.response ? error.response.data.message: error.message)
-            console.error(error)
-        }
+
+        await signUpMutation({ email, password })
+                .unwrap()
+                .then(async (payload)=> {
+                    console.log(payload);
+                    await dispatch(login(payload))
+                    navigate('/signUp/plans')
+                })
+                .catch((error)=>{
+                    console.error(error);
+                    setBackendError(error.response ? error.response.data.message : error.data.message)
+                })
+           
 
     }
 

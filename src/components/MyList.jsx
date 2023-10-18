@@ -1,9 +1,13 @@
 import Nav from "./Nav"
+import { useGetMyListQuery } from "../features/profileApi"
+import { useSelector } from "react-redux"
+import { selectCurrentProfile } from "../features/userSlice"
+import MovieCard from "./MovieCard"
 
 const MyList = () => {
 
-    const tv = []
-    const movies = []
+    const profile = useSelector(selectCurrentProfile)
+    const { data: myListResponse } = useGetMyListQuery(profile?.id)
 
   return (
     <div className='text-white bg-[#111] h-full min-h-[100vh]'>
@@ -11,20 +15,13 @@ const MyList = () => {
         <div className='pt-20 pl-5 pb-10 text-4xl text-white'>
             My List
         </div>
-        <div className='text-2xl p-5 text-white'>
-            Movie Shows
-        </div>
         <div className='bg-[#111] flex mt-0 pl-5 flex-wrap h-full z-10'>
-            {movies?.results?.map((show)=>(
-                <MovieCard key={show?.id} movie={show} type="movie" search/>
-            ))}
-        </div>
-        <div className='text-2xl p-5 text-white'>
-            TV Shows
-        </div>
-        <div className='bg-[#111] flex mt-0 pl-5 flex-wrap h-full z-10'>
-            {tv?.results?.map((show)=>(
-                <MovieCard key={show?.id} movie={show} type="tv" search/>
+            {myListResponse?.shows?.map((show)=>(
+                <MovieCard 
+                    key={show?.id} 
+                    movie={show} 
+                    type={show?.type} 
+                    search/>
             ))}
         </div>
     </div>

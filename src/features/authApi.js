@@ -10,9 +10,10 @@ export const authApi = apiSlice.injectEndpoints({
                 body: body
              })
         }),
-        logout: builder.query({
+        logout: builder.mutation({
             query: () => ({
-                url: '/auth/logout'
+                url: '/auth/logout',
+                method: 'DELETE'
             })
         }),
         refresh: builder.query({
@@ -34,7 +35,7 @@ export const authApi = apiSlice.injectEndpoints({
 })
 
 export const { useLoginMutation, 
-                useLogoutQuery, 
+                useLogoutMutation, 
                 useSignUpMutation, 
                 useRefreshQuery, 
                 useVerifyIdentityQuery } = authApi

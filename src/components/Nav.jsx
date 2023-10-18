@@ -14,6 +14,7 @@ function Nav({ links, background, searchParams }) {
     const [migrateProfile, setMigrateProfile] = useState(false)
     const [searchParam, setSearchParam] = useState('')
     const navigate = useNavigate()
+    
 
     const transitionNavBar = () => {
         if (window.scrollY > 50){

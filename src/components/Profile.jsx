@@ -1,33 +1,46 @@
 import React, { useState, useEffect } from 'react'
-import profiles from '../utils/profiles'
 import ProfileCard from './ProfileCard'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
 import ProfileEdit from './ProfileEdit'
+import { useGetAllProfilesQuery } from '../features/profileApi'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectProfiles, setProfiles } from '../features/userSlice'
+import { useGetMyListQuery, useGetNowWatchingQuery, useGetRatingsQuery } from '../features/profileApi'
 
 const Profile = ({ manageProfiles }) => {
-    manageProfiles = true
+
     const navigate = useNavigate()
     const [newProfile, setNewProfile] = useState(false)
     const [editProfile, setEditProfile] = useState(false)
     const [selectedProfile, setSelectedProfile] = useState(null)
-
-    useEffect(() => {
-        console.log(selectedProfile);
-    }, [selectedProfile])
     
+    const { data: profileResponse, isError, error, isLoading } = useGetAllProfilesQuery()
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        if (profileResponse) {
+            dispatch(setProfiles({profiles: profileResponse}))
+        }
+    }, [profileResponse])
+
+    const profiles = useSelector(selectProfiles)
+
 
   return (
-    <div className='relative h-[100%] md:h-[100vh] block m-auto bg-[#111] text-white'>
+    <div className='relative min-h-screen block m-auto bg-[#111] text-white'>
         <div className='flex relative'>
             <div className='relative m-auto py-16 md:py-32'>
                 <h1 className='text-4xl mb-8 lg:text-[70px] text-center'>{ manageProfiles ? 'Manage Profiles' : "Who's Watching?" }</h1>
                 <div className='flex flex-row flex-wrap justify-center'>
-                    {profiles.map((profile)=>(
-                        <ProfileCard key={profile.id} profile={profile} manageProfiles={manageProfiles} setEditProfile={()=>setEditProfile((prevState)=>!prevState)} setSelectedProfile={setSelectedProfile}/>
+                    {profiles?.map((profile)=>(
+                        <ProfileCard key={profile.id} 
+                            profile={profile} 
+                            manageProfiles={manageProfiles} 
+                            setEditProfile={()=>setEditProfile((prevState)=>!prevState)} setSelectedProfile={setSelectedProfile} 
+                        />
                     ))}
-                    {profiles.length < 5 && (
+                    {profiles?.length < 5 && (
                         <div className='cursor-pointer p-4 border-radius-lg hover:text-white'>
                             <div className='peer m-2 hover:bg-slate-300' onClick={()=>setNewProfile(true)}> 
                                 <FontAwesomeIcon  icon={faPlusCircle} style={{color: '#404040'}} className='fa-7x m-4 rounded-sm '/>

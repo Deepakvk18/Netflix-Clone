@@ -10,7 +10,7 @@ authorizations = {
 
 auth_api = Namespace(name='authentication', import_name='auth', path='/auth', authorizations=authorizations)
 
-netflix_api = Namespace(name='netflix', import_name='netflix')
+netflix_api = Namespace(name='netflix', import_name='netflix', authorizations=authorizations)
 
 user_api = Namespace(name='users', import_name='users', authorizations=authorizations)
 

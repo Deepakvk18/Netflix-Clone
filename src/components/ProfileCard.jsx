@@ -2,9 +2,20 @@ import { getProfileImgUrl } from '../utils/profiles'
 import { useNavigate } from 'react-router-dom'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useDispatch } from 'react-redux'
+import { setCurrentProfile } from '../features/userSlice'
 
 const ProfileCard = ({ profile, manageProfiles, setEditProfile, setSelectedProfile }) => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+
+    const onProfileClick = (e)=>{
+      e.preventDefault()
+      dispatch(setCurrentProfile({ profile }))
+      navigate('/browse')
+    }
+
+    
 
   return (
     <div className='relative group cursor-pointer' >
@@ -12,12 +23,13 @@ const ProfileCard = ({ profile, manageProfiles, setEditProfile, setSelectedProfi
         <div className='flex relative' onClick={manageProfiles ? ()=>{
           setSelectedProfile(profile)
           setEditProfile(true)
-        } : ()=>navigate('/browse')}>
+        } : ()=>{} }>
           <img 
               src={getProfileImgUrl(profile)} 
               alt="profile" 
               width={150}
               className={`m-4 rounded-sm hover:opacity-80 group-hover:ring-4 ring-white ${manageProfiles && 'opacity-50'}`}
+              onClick={onProfileClick}
           />
           { manageProfiles && (
             <div className='absolute bg-transparent z-10 inset-0' >

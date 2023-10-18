@@ -5,14 +5,45 @@ import genres from '../genres'
 import { useState } from 'react'
 import ShowDetails from './ShowDetails'
 import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectLikes, selectMyList, selectNowWatching } from '../features/userSlice'
+import { selectCurrentProfile } from '../features/userSlice'
+import { useGetCurrentEpisodeMutation } from '../features/profileApi'
 
 
 const MovieCard = ({ movie, type }) => {
 
     const baseurl = 'https://image.tmdb.org/t/p/original/'
     const navigate = useNavigate()
+    const profile = useSelector(selectCurrentProfile)
+    const liked = useSelector(selectLikes)?.includes(movie)
+    const myList = useSelector(selectMyList)?.includes(movie)
+    const nowWatching = useSelector(selectNowWatching)?.includes(movie)
+    // const [getCurrentEpisodeQuery] = useGetCurrentEpisodeQuery()
+    const [currentEpisodeApi] = useGetCurrentEpisodeMutation()
+    const rate = (e)=>{
 
-    if(!type) type = movie.media_type
+    }
+
+    const onPlay = (e)=>{
+      currentEpisodeApi({profileId: profile?.id, showId: movie?.id, type: 'tv'})
+        .unwrap()
+        .then((res)=>{
+          e.preventDefault()
+          navigate(`/watch/${'tv'}/${movie?.id}?tracking_id=${res?.id}`)
+        })
+        .catch((err)=>{console.error(err)})
+      
+    }
+
+    const mylist = (e)=>{
+
+    }
+
+    if(!type) type = movie?.media_type
+
+    if (!type) type = movie?.type
+  
 
     if(!movie?.backdrop_path) return <></>
 
@@ -29,12 +60,12 @@ const MovieCard = ({ movie, type }) => {
               <p className='line-clamp-1'>{movie?.title || movie?.name || movie?.original_name}</p>
 
               <p className='text-[8px] line-clamp-1'>
-                Genres: {movie?.genre_ids.map((genre_id)=>(genres.filter((genre)=>(genre.id === genre_id))[0].name)).join(', ')}
+                Genres: { movie?.genres ? (movie?.genres.map((genre)=>genre.name).join(', ')) : (movie?.genre_ids?.map((genre_id)=>(genres.filter((genre)=>(genre.id === genre_id))[0]?.name)).join(', ')) }
               </p>
             </div>
             <div className='flex px-2 items-center justify-around'>
               <div className='flex justify-between w-[50%] items-center'>
-                <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlay} size={'xl'}/>
+                <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlay} size={'xl'} onClick={onPlay}/>
                 <FontAwesomeIcon className='cursor-pointer' icon={faCirclePlus} size='xl'/>
                 <FontAwesomeIcon className='cursor-pointer' icon={faHeart} size={'xl'}/>
               </div>

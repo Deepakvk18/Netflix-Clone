@@ -6,12 +6,17 @@ import { isValidEmail } from '../utils/validator'
 import messages from '../utils/messages'
 import { useNavigate } from 'react-router-dom'
 import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
+import { useSignUpEmailMutation } from '../features/userApi'
+import { useDispatch } from 'react-redux'
+import { login } from '../features/userSlice'
 
 function SignUpScreen() {
 
     const [emailError, setEmailError] = useState('')
     const [email, setEmail] = useState('')
     const navigate = useNavigate()
+    const [signUpApi] = useSignUpEmailMutation()
+    const dispatch = useDispatch()
 
     const onSubmit = async (e)=>{
         e.preventDefault()
@@ -23,11 +28,18 @@ function SignUpScreen() {
         }
         setEmailError('')
          // API Call
-         try{
-            
-         } catch(error){
-
-         }
+         signUpApi({email})
+            .unwrap()
+            .then((res)=>{
+                console.log(res);
+                dispatch(login({ email }))
+                navigate('/signUp')
+            })
+            .catch((err)=>{
+                console.error(err)
+                setEmailError(err?.data?.message)
+            })
+         
     }
 
     useEffect(() => {

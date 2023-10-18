@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const userSlice = createSlice({
   name: 'user',
   initialState :{
+    plan: null,
     userId: null,
     idToken: null,
     email: null,
@@ -10,45 +11,54 @@ export const userSlice = createSlice({
     currentProfile: null,
     likes: [],
     myList: [],
+    nowWatching: []
   },
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     login: (state, action)=>{
-      const { email, localId, idToken } = action.payload
+      const { email, userId, idToken, plan, user } = action.payload
       state.email = email
-      state.userId = localId
+      state.userId = userId
+      state.user = user
       state.idToken = idToken
-      console.log(idToken);
-      localStorage.setItem('userId', localId)
-    },
-    signUp: (state, action)=>{
-      const { email } = action.payload
-      state.email = email
+      state.plan = plan
+      localStorage.setItem('userId', userId)
     },
     logout: (state)=>{
+      state.user = null
       state.email = null
       state.userId = null
+      state.idToken = null
       state.profiles = null
       state.currentProfile = null
       state.likes = []
       state.myList = []
+      state.nowWatching = []
       localStorage.removeItem('userId')
     },
     addToMyList: (state, action)=>{
       const { movie } = action.payload
-      state.myList.push(movie)
-    },
-    removeFromMyList: (state, action)=>{
-      const { movie } = action.payload
-      state.myList = state.myList.filter(item => item.id !== movie.id)
+      if (state.myList.includes(movie)){
+        state.myList = state.myList.filter(item => item.id !== movie.id)
+      }else{
+        state.myList.push(movie)
+      }
     },
     addToLikes: (state, action)=>{
       const { movie } = action.payload
-      state.likes.push(movie)
+      if (state.likes.includes(movie)){
+        state.likes = state.likes.filter(item => item.id !== movie.id)
+      } else{
+        state.likes.push(movie)
+      }
     },
-    removeFromLikes: (state, action)=>{
+    addToNowWatching: (state, action)=>{
       const { movie } = action.payload
-      state.likes = state.likes.filter(item => item.id !== movie.id)
+      if (state.nowWatching.includes(movie)){
+        state.nowWatching = state.nowWatching.filter(item => item.id !== movie.id)
+      } else{
+        state.nowWatching.push(movie)
+      }
     },
     setProfiles: (state, action)=>{
       const { profiles } = action.payload
@@ -60,6 +70,8 @@ export const userSlice = createSlice({
     },
     updateProfiles: (state, action)=>{
       const { profile } = action.payload
+      if (state.profiles.filter(p=>p.name==profile.name)){ return }
+      if (profile.name === 'Children') return
       state.profiles = state.profiles.map(item => {
         if(item.id === profile.id){
           return profile
@@ -69,14 +81,14 @@ export const userSlice = createSlice({
     },
     addProfile: (state, action)=>{
       const { profile } = action.payload
+      if (state.profiles.length >= 5){ return }
+      if (state.profiles.filter(p=>p.name==profile.name)){ return }
+      if (profile.name === 'Children') return
       state.profiles.push(profile)
     },
     setCurrentProfile: (state, action)=>{
       const { profile } = action.payload
       state.currentProfile = profile
-    },
-    removeCurrentProfile: (state)=>{
-      state.currentProfile = null
     },
     setMyList: (state, action)=>{
       const { myList } = action.payload
@@ -86,20 +98,26 @@ export const userSlice = createSlice({
       const { likes } = action.payload
       state.likes = likes
     },
+    setNowWatching: (state, action)=>{
+      const { nowWatching } = action.payload
+      state.nowWatching = nowWatching
+    }
   },
 });
 
-export const { login, logout, signUp, addToMyList, removeFromMyList, addProfile, removeCurrentProfile, setCurrentProfile, setLikes, removeFromLikes,  } = userSlice.actions;
 
-// The function below is called a selector and allows us to select a value from
-// the state. Selectors can also be defined inline where they're used instead of
-// in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectUser = (state) => state.user.userId;
+
+
+export const selectUserId = (state) => state.user.userId;
+export const selectUser = (state) => state.user.user;
+export const selectPlan = (state) => state.user.plan;
 export const selectEmail  = (state) => state.user.email;
 export const selectProfiles  = (state) => state.user.profiles;
 export const selectCurrentProfile = (state) => state.user.currentProfile;
+export const selectNowWatching = (state) => state.user.nowWatching;
 export const selectLikes  = (state) => state.user.likes;
 export const selectMyList  = (state) => state.user.myList;
 
+export const { login, logout, addToMyList, addToLikes, addProfile, removeCurrentProfile, setCurrentProfile, setLikes, setProfiles, deleteFromProfiles, updateProfiles, setNowWatching, setMyList, addToNowWatching } = userSlice.actions;
 
 export default userSlice.reducer;

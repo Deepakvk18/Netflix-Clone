@@ -2,6 +2,7 @@ import NavSignUp from "./NavSignUp"
 import { useState, useEffect } from "react"
 import { useGetProductsQuery } from "../features/paymentsApi"
 import PlanCard from "./PlanCard"
+import { useNavigate } from "react-router-dom"
 
 const Plans = () => {
 
@@ -20,29 +21,31 @@ const Plans = () => {
   )
 }
 
-export const PlanTable = ({ currentSubscription }) => {
+export const PlanTable = ({ currentSubscription, subscriptionChange }) => {
 
     const { data: plans, error, isError, isLoading } = useGetProductsQuery()
     const [currentPlan, setCurrentPlan] = useState('')
+    const navigate = useNavigate()
 
-    const changePlan = (planId)=>{
-        if (currentPlan === planId) {
+    const changePlan = (priceId)=>{
+        if (currentPlan === priceId) {
             setCurrentPlan('')
         } else {
-            setCurrentPlan(planId)
+            setCurrentPlan(priceId)
         }
     }
 
     const submit = (e) => {
         e.preventDefault()
-
+        navigate(`/signUp/payment?plan=${currentPlan}`)
     }
     
     return (
         <div className="relative inset-0 flex justify-left px-[5vw] items-center">
             
             <div className="block w-full mt-4">
-                <div className="block text-center">
+                { !currentSubscription ? (
+                    <div className="block text-center">
                     <div className='text-xl w-full text-left font-mono'>
                         STEP <b>2</b> OF <b>3</b>
                     </div>
@@ -65,9 +68,20 @@ export const PlanTable = ({ currentSubscription }) => {
                         Change or cancel your plan anytime.
                     </div>
                 </div>
+                ) : (
+                    <div>
+                        Your plan will be changed right away. You will be charged the new price on your next billing date. You will only be charged for the remaining days in the month and any previous charges will be credited.
+                    </div>
+                )}
                 <div className="flex flex-row flex-wrap w-full">
                     { plans?.data.map((plan) => (
-                        <PlanCard key={plan?.id} data={plan} changePlan={changePlan} currentPlan={currentPlan} currentSubscription={currentSubscription}/>
+                        <PlanCard 
+                            key={plan?.id} 
+                            data={plan} 
+                            changePlan={changePlan} 
+                            currentPlan={currentPlan} 
+                            currentSubscription={currentSubscription}
+                        />
                     ))}
                 </div>
                 <div className="block">
@@ -87,9 +101,9 @@ export const PlanTable = ({ currentSubscription }) => {
                     </div>
                     )}
                     
-                    {currentSubscription &&  (currentPlan !== currentSubscription.id) && (
+                    {currentSubscription && currentPlan && (currentPlan !== currentSubscription) && (
                         <div className=" flex w-full items-center justify-center">
-                            <button className="bg-netflixColor mt-8 h-14 w-[30vw] mb-4 text-2xl text-white font-semibold rounded-sm justify-center items-center" onClick={()=>{}}>
+                            <button className="bg-netflixColor mt-8 h-14 w-[30vw] mb-4 md:text-2xl text-white font-semibold rounded-sm text-lg justify-center items-center" onClick={()=>subscriptionChange(currentPlan)}>
                                 Change Plan
                             </button>
                         </div>

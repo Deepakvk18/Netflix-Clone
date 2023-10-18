@@ -21,11 +21,11 @@ class Checkout(Resource):
     @payments_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     @payments_api.doc(security="jsonWebToken")
     @firebase.jwt_required
-    def get(self):
+    def post(self):
         """Create a Checkout session for a user and a plan"""
         payload = payments_api.payload
         price_id = payload.get('priceId')
-        cust = stripe.Customer.list(email=payload.get('email')).get('data')
+        cust = stripe.Customer.list(email=firebase.get_user().get('email')).get('data')
         if not cust:
             raise PaymentException('NO_CUSTOMER_FOUND')
         cust_id = cust[0].get('id')
@@ -38,7 +38,7 @@ class Checkout(Resource):
                 },
             ],
             mode='subscription',
-            success_url=f'{constants.FRONTEND}/checkout?success=true&price={price_id}',
+            success_url=f'{constants.FRONTEND}/checkout?success=true&plan={price_id}',
             cancel_url=f'{constants.FRONTEND}/checkout?canceled=true',
         )
 
@@ -60,7 +60,7 @@ class CancelSubscription(Resource):
         subs = stripe.Subscription.list(customer=cust_id).get('data')
         if subs:
             subs = stripe.Subscription.modify(subs[0].get('id'), cancel_at_period_end=True)
-            user = User.filter_by(email=email).first()
+            user = User.query.filter_by(email=email).first()
             user.plan = 2
             db.session.commit()
             return subs
@@ -82,7 +82,7 @@ class ChangeSubscription(Resource):
         subs = stripe.Subscription.list(customer=cust_id).get('data')
         if subs:
             new_subs = stripe.Subscription.modify(subs[0].get('id'), items=[{'id': subs[0].get('items').get('data')[0].get('id'), 'price': price_id}])
-            user = User.filter_by(email=email).first()
+            user = User.query.filter_by(email=email).first()
             user.plan = price_id
             db.session.commit()
             return new_subs        

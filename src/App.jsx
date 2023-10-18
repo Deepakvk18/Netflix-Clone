@@ -45,9 +45,10 @@ function App() {
             <Route element={<ProtectedRoute />} >
               <Route exact path='/browse' element={<HomeScreen />} />
               <Route exact path='/discover/:title' element={<NavLinkPage />} />
+              <Route exact path='/profiles' element={<Profile/>} />
               <Route exact path='/account' element={<Account />} />
               <Route exact path='/checkout' element={<Checkout />} />
-              <Route exact path='/manageProfiles' element={<Profile />} />
+              <Route exact path='/manageProfiles' element={<Profile manageProfiles/>} />
               <Route exact path='/changePlan' element={<ChangePlan />}/>
               <Route exact path='/search' element={<Search />} />
               <Route exact path='/myList' element={<MyList />} />
