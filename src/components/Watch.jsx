@@ -4,13 +4,13 @@ import Nav from "./Nav"
 import ReactPlayer from "react-player"
 import { useGetNextEpisodeMutation } from "../features/profileApi"
 import { useNavigate } from "react-router-dom"
+import { useState } from "react"
 
 
 const Watch = () => {
   const { type, id } = useParams()
   const trackingId = new URLSearchParams(window.location.search).get('tracking_id')
   const { data } = useGetVideosQuery({ type, id })
-  console.log(trackingId);
   const video = Math.floor(Math.random() * (data?.results?.length - 1))
   const [nextEpisodeApi] = useGetNextEpisodeMutation()
   const navigate = useNavigate()
@@ -20,6 +20,10 @@ const Watch = () => {
       .unwrap()
       .then((res)=>{
         console.log(res);
+        if (res?.message){
+          navigate('/browse')
+          return
+        }
         navigate(`/watch/${type}/${id}?tracking_id=${trackingId}`)
       })
       .catch((err)=>{
@@ -53,13 +57,13 @@ const Watch = () => {
       { type === 'tv' ? (
         <button 
           onClick={nextEpisode}
-          className="absolute bottom-20 right-0 z-50 bg-gray-300 hover:bg-opacity-80 text-2xl px-8 py-2 rounded-lg mt-5 mr-5"
+          className="absolute bottom-20 right-0 z-2000 bg-gray-300 hover:bg-opacity-80 text-2xl px-8 py-2 rounded-lg mt-5 mr-5"
         >
           Next Episode
         </button>) : (
         <button 
           onClick={nextMovie}
-          className="absolute top-0 right-0 z-50 bg-gray-300 hover:bg-opacity-80 text-2xl p-2 rounded-lg mt-5 mr-5"
+          className="absolute bottom-20 right-0 z-2000 bg-gray-300 hover:bg-opacity-80 text-2xl px-8 py-2 rounded-lg mt-5 mr-5"
         >
           Home
         </button>

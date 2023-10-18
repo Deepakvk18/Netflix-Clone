@@ -42,7 +42,7 @@ export const profileApi = apiSlice.injectEndpoints({
         updateLikes: builder.mutation({
             query: (body) => ({
                 url: '/profile/like',
-                method: 'POST',
+                method: 'PUT',
                 body: body
             }),
             invalidatesTags: ['Ratings'],
@@ -50,7 +50,7 @@ export const profileApi = apiSlice.injectEndpoints({
         updateMyList: builder.mutation({
             query: (body) => ({
                 url: '/profile/updateMylist',
-                method: 'POST',
+                method: 'PUT',
                 body: body
             }),
             invalidatesTags: ['MyList'],
@@ -58,7 +58,7 @@ export const profileApi = apiSlice.injectEndpoints({
         updateNowWatching: builder.mutation({
             query: (body) => ({
                 url: '/profile/updateNowWatching',
-                method: 'POST',
+                method: 'PUT',
                 body: body
             }),
             invalidatesTags: ['NowWatching'],
@@ -67,13 +67,24 @@ export const profileApi = apiSlice.injectEndpoints({
             query: (profile_id) => ({
                 url: `/profile/getNowWatching/${profile_id}`
             }),
-            providesTags: ['NowWatching']
+            providesTags: ['NowWatching'],
+            transformResponse: (response) => {
+                // console.log("Now Watching", response);
+                const data = response?.shows.reverse()
+                // console.log("Transform", data);
+                return {shows: data}
+            }
         }),
         getMyList: builder.query({
             query: (profile_id) => ({
                 url: `/profile/getMyList/${profile_id}`
             }),
-            providesTags: ['MyList']
+            providesTags: ['MyList'],
+            transformResponse: (response) => {
+                const data = response?.shows.reverse()
+                // console.log("Transform", data);
+                return {shows: data}
+            }
         }),
         getRatings: builder.query({
             query: (profile_id) => ({
@@ -92,7 +103,8 @@ export const profileApi = apiSlice.injectEndpoints({
                 url: `/profile/getCurrentEpisode`,
                 method: 'PUT',
                 body: body
-            })
+            }),
+            invalidatesTags: ['NowWatching'],
         }),
         getProfileRecommendations: builder.query({
             query: (profileId) => ({
@@ -105,6 +117,18 @@ export const profileApi = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body: body
             })
+        }),
+        getMyListIds: builder.query({  
+            query: (profile_id) => ({
+                url: `/profile/getmlids/${profile_id}`
+            }),
+            providesTags: ['MyList']
+        }),
+        getNowWatchingIds: builder.query({  
+            query: (profile_id) => ({
+                url: `/profile/getnwids/${profile_id}`
+            }),
+            providesTags: ['NowWatching']
         }),
 
     })
@@ -124,4 +148,6 @@ export const { useAddProfileMutation,
                 useGetCurrentEpisodeMutation,
                 useGetNextEpisodeMutation,
                 useGetProfileRecommendationsQuery,
-                useSetCurrentEpisodeMutation } = profileApi
+                useSetCurrentEpisodeMutation,
+                useGetNowWatchingIdsQuery,
+                useGetMyListIdsQuery } = profileApi

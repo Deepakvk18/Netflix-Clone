@@ -8,9 +8,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { selectCurrentProfile } from '../features/userSlice'
 import { useEffect } from 'react'
-import { useGetMyListQuery, useGetNowWatchingQuery, useGetRatingsQuery, useGetProfileRecommendationsQuery } from '../features/profileApi'
+import { useGetMyListQuery, useGetMyListIdsQuery, useGetNowWatchingIdsQuery, useGetNowWatchingQuery, useGetRatingsQuery, useGetProfileRecommendationsQuery } from '../features/profileApi'
 import { useDispatch } from 'react-redux'
-import { setLikes, setNowWatching, setMyList } from '../features/userSlice'
+import { setLikes, setNowWatching, setMyList, setDislikes } from '../features/userSlice'
 
 function HomeScreen() {
 
@@ -18,14 +18,20 @@ function HomeScreen() {
   const dispatch = useDispatch()
 
   const profile = useSelector(selectCurrentProfile)
-  
-    // const { data: myListResponse } = useGetMyListQuery(profile?.id)
-    // const { data: nowWatchingResponse } = useGetNowWatchingQuery(profile?.id)
-    // const { data: ratingsResponse } = useGetRatingsQuery(profile?.id)
 
-    // if(myListResponse) dispatch(setMyList(myListResponse))
-    // if(nowWatchingResponse) dispatch(setNowWatching(nowWatchingResponse))
-    // if(ratingsResponse) dispatch(setLikes(ratingsResponse))
+    const { data: ratingsResponse } = useGetRatingsQuery(profile?.id)
+    const { data: myListResponse } = useGetMyListIdsQuery(profile?.id)
+    const { data: nowWatchingResponse } = useGetNowWatchingIdsQuery(profile?.id)
+
+    useEffect(() => {
+      if(myListResponse) dispatch(setMyList(myListResponse))
+      if(nowWatchingResponse) dispatch(setNowWatching(nowWatchingResponse))
+      if(ratingsResponse) {
+        dispatch(setLikes(ratingsResponse))
+        dispatch(setDislikes(ratingsResponse))
+      }
+    }, [ratingsResponse, myListResponse, nowWatchingResponse])
+    
 
   return (
     <div className=''>
@@ -52,6 +58,12 @@ export const Cards = ()=>{
         <Row
           title='Continue Watching...'
           query={useGetNowWatchingQuery}
+          continueWatching
+        />
+
+        <Row
+          title='Your List'
+          query={useGetMyListQuery}
         />
         
         <Row

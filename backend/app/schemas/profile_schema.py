@@ -48,7 +48,7 @@ like_input = profile_api.model('Like/Dislike/Love Show', model={
     'showId': fields.Integer(description="Show ID to be liked"),
     'profileId': fields.Integer(description="Profile ID who likes the show"),
     'type': fields.String(description="Type of Show (tv/movie)"),
-    'ratingId': fields.Integer(description="Rating ID of the action"),
+    'rating': fields.Integer(description="Rating ID of the action"),
 })
 
 mylist_input = profile_api.model('Add to My List', model={

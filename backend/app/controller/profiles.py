@@ -14,7 +14,6 @@ from ..schemas.profile_schema import (profile_model,
                                         current_episode_output,)
 from .netflix import get_show_details, get_recommendations                                  
 from .auth import sign_in
-from .netflix import get_movie_details
 from ..extensions import db
 
 from flask import jsonify
@@ -161,23 +160,23 @@ class UpdateLikes(Resource):
     @firebase.jwt_required
     def put(self):
         """Like, Dislike or Love the shows
-        ratingId:- 
+        rating:- 
         -1 - Dislike the show
-        0 / None - None
         1 - Like the show"""
         payload = profile_api.payload
         rating = Ratings.query.filter_by(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type')).first()
         if not rating:
-            rating = Ratings(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type') ,rating=payload.get('ratingId'))
+            rating = Ratings(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type') ,rating=payload.get('rating'))
             db.session.add(rating)
-        if(rating and rating.rating == payload.get('ratingId')):
-            rating.delete()
-        if(rating and rating.rating != payload.get('ratingId')):
-            rating.rating = payload.get('ratingId')
+        elif rating.rating == payload.get('rating'):
+            db.session.delete(rating)
+        else:
+            rating.rating = payload.get('rating')
         db.session.commit()
+        print(rating.id, rating.profile_id, rating.show_id, rating.type, rating.rating)
         return {'message': 'Successfully updated the preference!!'} 
 
-@profile_api.route('/updateMyList')
+@profile_api.route('/updateMylist')
 class AddMylist(Resource):
 
     @profile_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
@@ -192,13 +191,14 @@ class AddMylist(Resource):
         if not mylist:
             mylist = MyList(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type'))
             db.session.add(mylist)
+            db.session.commit()
         else:
-            mylist.delete()
-        db.session.commit()
+            db.session.delete(mylist)
+            db.session.commit()
         return {'message': 'Successfully updated mylist!!'} 
 
 @profile_api.route('/updateNowWatching')
-class AddNowWatching(Resource):
+class DeleteNowWatching(Resource):
 
     @profile_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     @profile_api.doc(security="jsonWebToken")
@@ -210,10 +210,9 @@ class AddNowWatching(Resource):
         payload = profile_api.payload
         now_watching = NowWatching.query.filter_by(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type')).first()
         if not now_watching:
-            now_watching = NowWatching(profile_id=payload.get('profileId'), show_id=payload.get('showId'), type=payload.get('type'))
-            db.session.add(now_watching)
+            return
         else:
-            now_watching.delete()
+            db.session.delete(now_watching)
         db.session.commit()
         return {'message': 'Successfully updated now_watching!!'} 
 
@@ -236,10 +235,11 @@ class GetNowWatching(Resource):
     @firebase.jwt_required
     def get(self, profile_id):
         """Get the list of shows in Now Watching"""
-        now_watching = NowWatching.query.filter_by(profile_id=profile_id)
-        now_watching_list = [get_show_details(show.show_id, show.type) for show in  now_watching]
-        print(now_watching_list)
-        return {'shows': now_watching_list}
+        now_watching = NowWatching.query.filter_by(profile_id=profile_id).all()
+        now_watching = [get_show_details(nw.show_id, nw.type) for nw in now_watching]
+        return {'shows': now_watching}
+
+
 
 @profile_api.route('/getRatings/<int:profile_id>')
 class GetRatings(Resource):
@@ -249,9 +249,35 @@ class GetRatings(Resource):
     @firebase.jwt_required
     def get(self, profile_id):
         """Get the list of shows in Ratings"""
-        payload = profile_api.payload
-        ratings = Ratings.query.filter_by(profile_id=profile_id)
-        return {'shows': [get_show_details(rating.show_id, rating.type, rating) for rating in  ratings]}
+        likes = Ratings.query.filter_by(profile_id=profile_id, rating=1).with_entities(Ratings.show_id).all()
+        likes = [l.show_id for l in likes]
+        dislikes = Ratings.query.filter_by(profile_id=profile_id, rating=-1).with_entities(Ratings.show_id).all()
+        dislikes = [d.show_id for d in dislikes]
+        return {'likes': likes, 'dislikes': dislikes}
+
+@profile_api.route('/getnwids/<int:profile_id>')
+class GetNowWatchingIds(Resource):
+
+    @profile_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    @profile_api.doc(security="jsonWebToken")
+    @firebase.jwt_required
+    def get(self, profile_id):
+        """Get the list of show ids in Now Watching List"""
+        now_watching = NowWatching.query.filter_by(profile_id=profile_id).all()
+        now_watching = [nw.show_id for nw in now_watching]
+        return {'nowWatching': now_watching}
+
+@profile_api.route('/getmlids/<int:profile_id>')
+class GetNowWatchingIds(Resource):
+
+    @profile_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    @profile_api.doc(security="jsonWebToken")
+    @firebase.jwt_required
+    def get(self, profile_id):
+        """Get the list of show ids in Now Watching List"""
+        my_list = MyList.query.filter_by(profile_id=profile_id).all()
+        my_list = [ml.show_id for ml in my_list]
+        return {'myList': my_list}
 
 @profile_api.route('/getRecommendations/<int:profile_id>')
 class GetRecommendations(Resource):
@@ -279,8 +305,9 @@ class GetNextEpisode(Resource):
         now_watching = NowWatching.query.filter_by(id=tracking_id).first()
         if (now_watching.type == 'movie'):
             db.session.delete(now_watching)
+            db.session.commit()
             return {'id': None, 'show_id': None, 'type': None, 'season': None, 'episode': None}
-        movie_details = get_movie_details(now_watching.show_id, now_watching.type)
+        movie_details = get_show_details(now_watching.show_id, now_watching.type)
         no_of_seasons = len(movie_details.get('seasons'))
         watching_season = now_watching.season
         next_episode = now_watching.episode + 1
@@ -291,6 +318,7 @@ class GetNextEpisode(Resource):
         now_watching.episode = next_episode
         if (watching_season > no_of_seasons):
             db.session.delete(now_watching)
+            return {'message': 'the show ended'}
         db.session.commit()
         return {'id': now_watching.id, 'show_id': now_watching.show_id, 'type': now_watching.type, 'season': watching_season, 'episode': next_episode} if now_watching else {'message': 'The show is over'}
 
@@ -316,7 +344,6 @@ class GetCurrentEpisode(Resource):
             db.session.add(now_watching)
         db.session.commit()
         now_watching = NowWatching.query.filter_by(profile_id=profile_id, show_id=show_id, type=type).first()
-        print(now_watching.id)
         return now_watching
 
 @profile_api.route('/setCurrentEpisode')
@@ -330,6 +357,7 @@ class SetCurrentEpisode(Resource):
     def put(self):
         """Set the now watching episode of the show"""
         payload = profile_api.payload
+        print(payload)
         show_id = payload.get('showId')
         type = payload.get('type')
         profile_id = payload.get('profileId')
@@ -338,6 +366,9 @@ class SetCurrentEpisode(Resource):
         now_watching = NowWatching.query.filter_by(profile_id=profile_id, type=type, show_id=show_id).first()
         if not now_watching:
             now_watching = NowWatching(profile_id=profile_id, show_id=show_id, type=type, season=season, episode=episode)
+            db.session.add(now_watching)
         now_watching.season = season
         now_watching.episode = episode
+        db.session.commit()
+        now_watching = NowWatching.query.filter_by(profile_id=profile_id, show_id=show_id, type=type).first() 
         return now_watching

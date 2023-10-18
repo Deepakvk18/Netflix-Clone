@@ -10,10 +10,10 @@ export const userSlice = createSlice({
     profiles: null,
     currentProfile: null,
     likes: [],
+    dislikes: [],
     myList: [],
     nowWatching: []
   },
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     login: (state, action)=>{
       const { email, userId, idToken, plan, user } = action.payload
@@ -37,28 +37,37 @@ export const userSlice = createSlice({
       localStorage.removeItem('userId')
     },
     addToMyList: (state, action)=>{
-      const { movie } = action.payload
-      if (state.myList.includes(movie)){
-        state.myList = state.myList.filter(item => item.id !== movie.id)
+      const { showId } = action.payload
+      if (state.myList.includes(showId)){
+        state.myList = state.myList.filter(item => item !== showId)
       }else{
-        state.myList.push(movie)
+        state.myList.push(showId)
       }
     },
     addToLikes: (state, action)=>{
-      const { movie } = action.payload
-      if (state.likes.includes(movie)){
-        state.likes = state.likes.filter(item => item.id !== movie.id)
+      const { showId } = action.payload
+      if (state.likes.includes(showId)){
+        state.likes = state.likes.filter(item => item !== showId)
       } else{
-        state.likes.push(movie)
+        state.likes.push(showId)
+      }
+    },
+    addToDislikes: (state, action)=>{
+      const { showId } = action.payload
+      if (state.dislikes.includes(showId)){
+        state.dislikes = state.dislikes.filter(item => item !== showId)
+      } else{
+        state.dislikes.push(showId)
       }
     },
     addToNowWatching: (state, action)=>{
-      const { movie } = action.payload
-      if (state.nowWatching.includes(movie)){
-        state.nowWatching = state.nowWatching.filter(item => item.id !== movie.id)
-      } else{
-        state.nowWatching.push(movie)
-      }
+      const { showId } = action.payload
+      if (state.nowWatching.includes(showId)){ return }
+      state.nowWatching.push(showId)
+    },
+    removeFromNowWatching: (state, action)=>{
+      const { showId } = action.payload
+      state.nowWatching = state.nowWatching.filter(item => item !== showId)
     },
     setProfiles: (state, action)=>{
       const { profiles } = action.payload
@@ -66,6 +75,7 @@ export const userSlice = createSlice({
     },
     deleteFromProfiles: (state, action)=>{
       const { profile } = action.payload
+      if (profile.name === 'Children') return
       state.profiles = state.profiles.filter(item => item.id !== profile.id)
     },
     updateProfiles: (state, action)=>{
@@ -98,6 +108,10 @@ export const userSlice = createSlice({
       const { likes } = action.payload
       state.likes = likes
     },
+    setDislikes: (state, action)=>{
+      const { dislikes } = action.payload
+      state.dislikes = dislikes
+    },
     setNowWatching: (state, action)=>{
       const { nowWatching } = action.payload
       state.nowWatching = nowWatching
@@ -116,8 +130,9 @@ export const selectProfiles  = (state) => state.user.profiles;
 export const selectCurrentProfile = (state) => state.user.currentProfile;
 export const selectNowWatching = (state) => state.user.nowWatching;
 export const selectLikes  = (state) => state.user.likes;
+export const selectDisLikes  = (state) => state.user.dislikes;
 export const selectMyList  = (state) => state.user.myList;
 
-export const { login, logout, addToMyList, addToLikes, addProfile, removeCurrentProfile, setCurrentProfile, setLikes, setProfiles, deleteFromProfiles, updateProfiles, setNowWatching, setMyList, addToNowWatching } = userSlice.actions;
+export const { login, logout, addToMyList, addToLikes, addProfile, removeCurrentProfile, setCurrentProfile, setLikes, setProfiles, deleteFromProfiles, updateProfiles, setNowWatching, setMyList, addToNowWatching, addToDislikes, setDislikes, removeFromNowWatching } = userSlice.actions;
 
 export default userSlice.reducer;

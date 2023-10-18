@@ -51,7 +51,6 @@ class FireBaseAuth:
         def wrapper(*args, **kwargs):
 
             jwt = self.get_token()
-            print(jwt)
             self.validate(jwt)
             return api_func(*args, **kwargs)
 

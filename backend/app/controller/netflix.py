@@ -129,7 +129,7 @@ class GetShowVideos(Resource):
     
 def get_show_details(show_id, type, rating=None):
     url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'
-    show_details = return_api_response(url)
+    show_details = dict(return_api_response(url))
     show_details['type'] = type
     if (rating):
         show_details['rating'] = rating
