@@ -155,6 +155,8 @@ def get_recommendations(likes):
             shows.extend(res)
         else:
             results = recommendations.get('results')
+            if recommendations is None:
+                continue
             res = []
             for result in results:
                 result['type'] = show.type

@@ -17,10 +17,9 @@ class BaseConfig(object):
     API_KEY = environ.get('API_KEY')
     BROKER_URL = environ.get('BROKER_URL')
     RESULT_BACKEND = environ.get('RESULT_BACKEND')
-    CORS_HEADERS = 'Content-Type'
     LOG_INFO_FILE = path.join(basedir, 'log', 'info.log')
     LOG_CELERY_FILE = path.join(basedir, 'log', 'celery.log')
-    CORS_SUPPORTS_CREDENTIAL = True
+
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
