@@ -36,25 +36,23 @@ class SignUp(Resource):
             signed_in = firebase.signup(sign_up.get('email'), sign_up.get('password'))
         except HTTPError as e:
             signed_in = firebase.login(sign_up.get('email'), sign_up.get('password'))
-        refresh = signed_in.get('refreshToken')
         user = User.query.filter_by(email=sign_up.get('email')).first()
         user.uuid = signed_in.get('localId')
         db.session.commit()
         signed_in = sign_in(sign_up.get('email'), sign_up.get('password'))
-        return (signed_in.get_json())
+        return (signed_in)
 
 @auth_api.route('/signin')
 class LogIn(Resource):
 
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error'})
     @auth_api.expect(sign_in_model)
-    @cross_origin(supports_credentials=True)
     # @auth_api.marshal_with(sign_in_output)
     def post(self):
         """Sign in to the Application using email and password"""
         sign_in_payload = auth_api.payload
         signed_in = sign_in(sign_in_payload.get('email'), sign_in_payload.get('password'))
-        return (signed_in.get_json())
+        return (signed_in)
 
 @auth_api.route('/verifyIdentity')
 class Identity(Resource):
@@ -73,11 +71,13 @@ class Refresh(Resource):
     
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
     @auth_api.doc(security='jsonWebToken')
-    @auth_api.marshal_with(refresh_output)
+    # @auth_api.marshal_with(refresh_output)
     def get(self):
         """Get the new access token of the user given a refresh token"""
         new_info = firebase.refresh()
-        return {'email': new_info.get('email'), 'idToken': new_info.get('idToken'), 'localId': new_info.get('localId'), 'refreshToken': new_info.get('refreshToken')}
+        response = make_response({'email': new_info.get('email'), 'idToken': new_info.get('idToken'), 'localId': new_info.get('localId'), 'refreshToken': new_info.get('refreshToken')})
+        response.set_cookie('refresh_token', value=new_info.get('refreshToken'), domain=constants.COOKIE_FRONTEND, httponly=True, max_age=2560000, secure=True, samesite=None)
+        return response
 
 @auth_api.route('/logout')
 class Logout(Resource):
@@ -111,8 +111,6 @@ def sign_in(email, password):
     id_token = signed_in.get('idToken')
     refresh = signed_in.get('refreshToken')
     signed_in = make_response({ 'email': signed_in.get('email'), 'userId': signed_in.get('localId'), 'idToken': signed_in.get('idToken'), 'plan': plan.to_dict(), 'user': user.to_dict() })
-    signed_in.set_cookie('access_token', value=id_token, httponly=True, max_age=3500)
-    signed_in.headers['Authorization'] = f'Bearer {id_token}'
-    signed_in.set_cookie('refresh_token', value=refresh, httponly=True, max_age=2560000)
+    signed_in.set_cookie('refresh_token', domain=constants.COOKIE_FRONTEND, value=refresh, httponly=True, max_age=2560000, samesite=None, secure=True)
     
     return signed_in

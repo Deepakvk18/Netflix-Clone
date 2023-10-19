@@ -148,7 +148,7 @@ class MigrateProfile(Resource):
             raise UserException('USER_NOT_FOUND')
         profile.user_id = user.get('localId')
         db.session.commit()
-        return {'message': 'Successfully migrated the profile!!'} 
+        return user
 
 @profile_api.route('/like')
 class UpdateLikes(Resource):

@@ -7,6 +7,8 @@ import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 import ProfilePopover from './ProfilePopOver'
 import MigrateProfile from './MigrateProfile'
 import netflixMobile from './assets/images/mobile-logo.webp'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectProfiles, setCurrentProfile, setProfiles } from '../features/userSlice'
 
 function Nav({ links, background, searchParams }) {
 
@@ -15,6 +17,8 @@ function Nav({ links, background, searchParams }) {
     const [migrateProfile, setMigrateProfile] = useState(false)
     const [searchParam, setSearchParam] = useState('')
     const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const profiles = useSelector(selectProfiles)
     
 
     const transitionNavBar = () => {
@@ -25,15 +29,22 @@ function Nav({ links, background, searchParams }) {
         }
     }
 
+    const changeProfile = async () => {
+        const childrenProfile = profiles?.filter((profile)=>profile?.name === 'Children')[0]
+        console.log(childrenProfile);
+        await dispatch(setCurrentProfile({ profile: childrenProfile }))
+        navigate('/browse')
+    }
+
     useEffect(()=>{
         window.addEventListener("scroll", transitionNavBar)
         return () => window.removeEventListener("scroll", transitionNavBar)
     }, [])
 
     const showSearchBar = async () => {
-        setSearchBar(true)
-        // await new Promise((resolve) => setTimeout(resolve, 100));
-        const element = document.getElementById('searchBar')
+        setSearchBar((prev)=>!prev)
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        const element = document.getElementById('search-input')
         element.focus()
     }
 
@@ -115,13 +126,13 @@ function Nav({ links, background, searchParams }) {
             }
             </div>
              
-             <div className='w-1/2 items-center justify-right'>
+             <div className=' w-1/2 justify-right'>
                 { links && 
                     <div className='w-full justify-center items-center right-0'>
                         { searchBar && 
                         <input
-                            className='absolute transition-all max-w-sm top-16 ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 px-2 py-1 ring-slate-400 ring-2'
-                            id='searchBar'
+                            className='absolute transition-all w-[300px] sm:w-[400px] top-28 right-40 ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 px-2 py-1 ring-slate-400 ring-2'
+                            id='search-input'
                             value={searchParams ? searchParams : searchParam}
                             onChange={(e)=>setSearchParam(e.target.value)}
                             placeholder='Titles, people, genres'
@@ -129,7 +140,7 @@ function Nav({ links, background, searchParams }) {
                             onKeyUp={onKeyUp}
                         />
                         }
-                        <div className={``}>
+                        <div className={`absolute right-16 md:right-24 flex`}>
                             <FontAwesomeIcon 
                                 className='mr-4 cursor-pointer'
                                 icon={faMagnifyingGlass} 
@@ -137,7 +148,7 @@ function Nav({ links, background, searchParams }) {
                                 style={{color: "#fff",}} 
                                 onClick={showSearchBar}
                             />
-                            <Link onClick={()=>{}} className='cursor-pointer nav-links mr-4'>Children</Link>
+                            <p onClick={changeProfile} className='cursor-pointer nav-links mr-4 hover:underline'>Children</p>
                             <FontAwesomeIcon 
                                 icon={faBell} 
                                 className='mr-4 cursor-pointer'

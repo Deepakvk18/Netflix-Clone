@@ -5,6 +5,7 @@ import os
 import requests
 from dotenv import load_dotenv
 from ..services.authentication import firebase 
+from ..exceptions.custom_exceptions import NetflixException
 import random
 from functools import reduce
 
@@ -141,7 +142,9 @@ def get_recommendations(likes):
     for show in likes:
         url = f'{API_BASE_URL}/{show.type}/{show.id}/recommendations?api_key={API_KEY}'
         recommendations = return_api_response(url)
-        if len(recommendations.get('results')) > 10:    
+        if recommendations is None:
+            continue
+        if recommendations.get('results') and len(recommendations.get('results')) > 10:    
             results = random.choices(recommendations.get('results'), k=10)
             res = []
             for result in results:

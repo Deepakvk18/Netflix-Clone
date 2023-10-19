@@ -70,7 +70,8 @@ class FireBaseAuth:
     @staticmethod
     def get_refresh_token():
         refresh = request.cookies.get('refresh_token')
-        print(request.headers.get('Set-Cookie'))
+        print(request.headers)
+        print(request.cookies)
         if not refresh:
             raise AuthException(message='NO_REFRESH_TOKEN_FOUND')
         return refresh

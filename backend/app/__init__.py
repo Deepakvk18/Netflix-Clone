@@ -31,7 +31,7 @@ def create_app():
     app.config.from_object(app_config[APPLICATION_ENV])
 
     cors_config = {
-        'origins': [constants.FRONTEND],
+        'origins': [constants.FRONTEND, constants.COOKIE_FRONTEND],
         'methods': ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'],
         'allowed_headers': ['Content-Type', 'Authorization', 'Access-Control-Allow-Credentials', 'Access-Control-Allow-Origin'],
         'expose_headers': '*',

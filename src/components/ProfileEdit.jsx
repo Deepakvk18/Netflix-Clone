@@ -63,7 +63,7 @@ const ProfileEdit = ({ editProfile, addProfile, setEditProfile, setNewProfile, p
   return (
     <div className='fixed bg-[#111] text-white inset-0 h-[100%] w-[100%] flex z-40 justify-center items-center bg-opacity-80'>
         
-        <div className='flex flex-col bg-[#111] flex-wrap p-5 rounded-xl w-[40%] ring-white ring-1 items-center'>
+        <div className='flex flex-col bg-[#111] flex-wrap p-5 rounded-xl max-w-sm ring-white ring-1 items-center'>
             { backendError && 
                 <div className='bg-errorText text-white text-left p-2 text-sm rounded-lg mb-4'>
                     { backendError }
@@ -77,15 +77,15 @@ const ProfileEdit = ({ editProfile, addProfile, setEditProfile, setNewProfile, p
                     </label>
                     <input 
                         type="text" 
-                        className={`h-12 w[40%] p-5 mb-2 pt-4 mr-2 text-sm text-white bg-gray-700 rounded-sm focus:border-white focus:ring-1 focus:ring-white peer `}
+                        className={`h-12 w-full my-2 p-5 mb-2 pt-4 mr-2 text-sm text-white bg-gray-700 rounded-sm focus:border-white focus:ring-1 focus:ring-white peer `}
                         placeholder=" "
                         value={name}
                         onChange={(e)=>setName((prev)=>e.target.value)}
                     />
                 </div>
             </div>
-            <div className='flex m-2 justify-left items-center'>
-                <label htmlFor="children" className='mr-4 text-xl'>
+            <div className='flex w-full ml-4 items-center justify-left text-left'>
+                <label htmlFor="children" className='mr-4 text-xl justify-left'>
                     Child?
                 </label>
                 <input 
@@ -97,23 +97,23 @@ const ProfileEdit = ({ editProfile, addProfile, setEditProfile, setNewProfile, p
             </div>
             { addProfile && (
                 <div className='flex-row'>
-                    <button className='px-8 m-4 py-3 text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={addProfileClick}>
+                    <button className='px-4 m-4 py-2 ring-inset text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={addProfileClick}>
                         Add
                     </button>
-                    <button className='my-10 m-4 mx-auto px-8 text-xl py-3 cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={()=>setNewProfile(false)}>
+                    <button className='my-4 m-4 mx-auto px-4 text-xl py-2 ring-inset cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={()=>setNewProfile(false)}>
                         Cancel
                     </button>
                 </div>
             ) }
             { editProfile && (
                 <div className='flex-row justify-between'>
-                <button className='my-10 px-8 m-4 py-3 text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={editProfileClick}>
+                <button className='my-4 px-4 m-4 py-2 text-xl cursor-pointer text-black bg-white hover:ring-2 hover:text-white font-bold hover:bg-netflixColor' onClick={editProfileClick}>
                     Edit
                 </button>
-                <button className='my-10 px-8 m-4 text-xl py-3 cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={()=>setEditProfile(false)}>
+                <button className='my-4 px-4 m-4 text-xl py-2 ring-inset cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={()=>setEditProfile(false)}>
                     Cancel
                 </button>
-                <button className='my-10 px-8 m-4 text-xl py-3 cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={deleteProfileClick}>
+                <button className='my-4 px-4 m-4 text-xl py-2 ring-inset cursor-pointer bg-[#111] ring-gray-500 ring-2 text-gray-500 bg-opacity-40 hover:ring-2 hover:ring-white hover:text-white' onClick={deleteProfileClick}>
                     Delete Profile
                 </button>
             </div>
