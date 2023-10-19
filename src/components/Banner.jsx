@@ -32,7 +32,7 @@ export default function Banner({ nth }) {
   }
 
   return (
-    <header className='relative rounded-lg to-black h-[90vh] text-white object-contain flex justify-start mb-4' style={{
+    <header className='relative rounded-lg to-black w-[99.3vw] h-[90vh] text-white object-contain flex justify-start mb-4' style={{
         backgroundSize: 'cover',
         backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie?.backdrop_path})`,
         backgroundPosition: 'center'

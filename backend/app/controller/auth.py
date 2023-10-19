@@ -104,6 +104,8 @@ def create_first_profiles(user_id):
 def sign_in(email, password):
     """Method to sign in to the firebase account"""
     user = User.query.filter_by(email=email).first()
+    if not user:
+        raise AuthException('USER_NOT_FOUND')
     plan = get_plan(user.plan)
     signed_in = firebase.login(email, password)
     create_first_profiles(signed_in.get('localId'))

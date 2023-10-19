@@ -132,23 +132,28 @@ class MigrateProfile(Resource):
 
     @profile_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     @profile_api.doc(security="jsonWebToken")
-    @profile_api.marshal_with(message_output)
+    # @profile_api.marshal_with(message_output)
     @profile_api.expect(migrateprofile_input)
     @firebase.jwt_required
     def post(self):
         """Migrate Profile from one user to another"""
         payload = profile_api.payload
+        to_user = User.query.filter_by(email=payload.get('email')).first()
+        if not to_user:
+            raise UserException(message='NO_USER_FOUND')
         user = sign_in(payload.get('email'), payload.get('password'))
-        if not user:
-            raise UserException('USER_NOT_FOUND')
         profile = Profiles.query.filter_by(id=payload.get('profileId')).first()
-        print(profile, payload.get('profileId'))
         if not profile:
             raise ProfileException(message='PROFILE_NOT_FOUND')
-        user = User.query.filter_by(uuid=payload.get('toUserId')).first()
-        if not user:
-            raise UserException('USER_NOT_FOUND')
-        profile.user_id = user.get('localId')
+        profiles = Profiles.query.filter_by(user_id=to_user.uuid).all()
+        if profile.name == 'Children':
+            raise ProfileException(message='CHILDREN_CANNOT_BE_MIGRATED')
+        if len(profiles) == 5:
+            raise ProfileException('PROFILE_LIMIT_EXCEEDED')
+        for pro in profiles:
+            if pro.name == profile.name:
+                raise ProfileException('PROFILE_ALREADY_EXIST')
+        profile.user_id = to_user.uuid
         db.session.commit()
         return user
 

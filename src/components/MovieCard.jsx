@@ -3,7 +3,6 @@ import { faCirclePlay, faCirclePlus, faThumbsUp, faThumbsDown, faCircleCheck, fa
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import genres from '../genres'
 import { useState } from 'react'
-import ShowDetails from './ShowDetails'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { addToNowWatching, removeFromNowWatching, selectDisLikes, selectLikes, selectMyList, selectNowWatching } from '../features/userSlice'

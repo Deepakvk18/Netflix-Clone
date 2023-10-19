@@ -25,16 +25,8 @@ export const userSlice = createSlice({
       localStorage.setItem('userId', userId)
     },
     logout: (state)=>{
-      state.user = null
-      state.email = null
-      state.userId = null
-      state.idToken = null
-      state.profiles = null
-      state.currentProfile = null
-      state.likes = []
-      state.myList = []
-      state.nowWatching = []
-      localStorage.removeItem('userId')
+      state = undefined
+      localStorage.clear()
     },
     addToMyList: (state, action)=>{
       const { showId } = action.payload

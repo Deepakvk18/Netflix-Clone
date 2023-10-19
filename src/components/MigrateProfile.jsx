@@ -7,7 +7,7 @@ import { selectProfiles } from "../features/userSlice"
 import { useSelector } from "react-redux"
 import { useMigrateProfileMutation } from "../features/profileApi"
 import { useDispatch } from "react-redux"
-import { login } from "../features/userSlice"
+import { login, logout } from "../features/userSlice"
 import { useNavigate } from "react-router-dom"
 
 const MigrateProfile = ({ setMigrateProfile }) => {
@@ -20,6 +20,7 @@ const MigrateProfile = ({ setMigrateProfile }) => {
     const [backendError, setBackendError] = useState('')
     const profiles = useSelector(selectProfiles)
     const [migrateProfile] = useMigrateProfileMutation()
+    const [profileId, setProfileId] = useState(profiles[0]?.id)
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
@@ -27,14 +28,15 @@ const MigrateProfile = ({ setMigrateProfile }) => {
         e.preventDefault()
         if(!isValidEmail(email) || !isValidPassword(password)) return
         // API Call
+        console.log(profileId);
         console.log("Migrate Profile");
-        migrateProfile({ profileId: profile?.id, email, password })
+        migrateProfile({ profileId, email, password })
             .unwrap()
             .then((originalPromiseResult)=>{
                 console.log("Profile Migrated", originalPromiseResult);
                 setMigrateProfile(false)
                 dispatch(logout())
-                dispatch(login({ idToken: originalPromiseResult.idToken, user: originalPromiseResult.user, profiles: originalPromiseResult.profiles }))
+                dispatch(login(originalPromiseResult))
                 navigate('/profiles')
                 })
             .catch((error)=>{
@@ -70,9 +72,14 @@ const MigrateProfile = ({ setMigrateProfile }) => {
                     <label htmlFor="profile" className='mb-4 text-xl'>
                         Profile to Transfer 
                     </label>
-                    <select className="bg-black h-12 rounded-lg ring-2 ring-white w-[100%]" name="profile" id="profile">
+                    <select className="bg-black h-12 rounded-lg ring-2 ring-white w-[100%]" name="profile" id="profile" value={profileId} onChange={(e)=>setProfileId(e.target.value)}>
                         { profiles.map((profile) => (
-                            <option key={profile.key} value={profile.id}>{profile.name}</option>
+                            <option 
+                                key={profile.id} 
+                                value={profile.id}
+                            >
+                                {profile.name}
+                            </option>
                         ))}
                     </select>
                 </div>
