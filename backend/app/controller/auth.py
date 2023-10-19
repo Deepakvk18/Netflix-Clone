@@ -76,7 +76,7 @@ class Refresh(Resource):
         """Get the new access token of the user given a refresh token"""
         new_info = firebase.refresh()
         response = make_response({'email': new_info.get('email'), 'idToken': new_info.get('idToken'), 'localId': new_info.get('localId'), 'refreshToken': new_info.get('refreshToken')})
-        response.set_cookie('refresh_token', value=new_info.get('refreshToken'), domain=constants.COOKIE_FRONTEND, httponly=True, max_age=2560000, secure=True, samesite=None)
+        response.set_cookie('refresh_token', value=new_info.get('refreshToken'), domain=constants.FRONTEND, httponly=True, max_age=2560000, secure=True, samesite=None)
         return response
 
 @auth_api.route('/logout')
@@ -111,6 +111,6 @@ def sign_in(email, password):
     id_token = signed_in.get('idToken')
     refresh = signed_in.get('refreshToken')
     signed_in = make_response({ 'email': signed_in.get('email'), 'userId': signed_in.get('localId'), 'idToken': signed_in.get('idToken'), 'plan': plan.to_dict(), 'user': user.to_dict() })
-    signed_in.set_cookie('refresh_token', domain=constants.COOKIE_FRONTEND, value=refresh, httponly=True, max_age=2560000, samesite=None, secure=True)
+    signed_in.set_cookie('refresh_token', domain=constants.FRONTEND, value=refresh, httponly=True, max_age=2560000, samesite=None, secure=True)
     
     return signed_in

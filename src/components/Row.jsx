@@ -37,7 +37,7 @@ function Row({ title, query, continueWatching }) {
                     ) }
                 </h2>
             </Link>
-            <div className="relative flex h-48 overflow-y-visible overflow-x-scroll scrollbar-hide">
+            <div className="relative mr-4 flex h-48 overflow-y-visible overflow-x-scroll scrollbar-hide">
                 { movies?.map((movie)=>(
                         <MovieCard 
                             key={movie?.id} 
