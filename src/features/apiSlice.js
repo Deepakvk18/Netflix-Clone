@@ -10,7 +10,6 @@ const baseQuery = fetchBaseQuery({
     mode: 'cors',
     prepareHeaders: (headers, { getState }) => {
         const idToken = getState().user.idToken
-        console.log("Inside Prepare Headers", idToken);
         if (idToken) {
             headers.set("Authorization", `Bearer ${idToken}`)
         }
@@ -22,8 +21,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
     // If the API call is failed, retry it after refreshing the access token
     let result = await baseQuery(args, api, extraOptions)
-
-    console.log("Reauth", result?.error);
 
     if (result?.error?.status === 403) {
         console.log('sending refresh token')

@@ -379,3 +379,10 @@ class SetCurrentEpisode(Resource):
         db.session.commit()
         now_watching = NowWatching.query.filter_by(profile_id=profile_id, show_id=show_id, type=type).first() 
         return now_watching
+
+@profile_api.route('/changeProfile')
+class GetProfile(Resource):
+
+    def put(self):
+        """Dummy Method"""
+        return {'message': 'Successfully updated the preference!!'}

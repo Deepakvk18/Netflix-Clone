@@ -31,17 +31,17 @@ const MovieCard = ({ movie, type, continueWatching }) => {
     const optimisticLike = (rating)=>{
       if (rating === 1){
         setLiked((prev)=>!prev)
-        dispatch(addToLikes(movie?.id))
+        dispatch(addToLikes({ showId: movie?.id }))
         if (disliked){
           setDisliked((prev)=>!prev)
-          dispatch(addToDislikes(movie?.id))
+          dispatch(addToDislikes({ showId: movie?.id }))
         }
       } else {
         setDisliked((prev)=>!prev)
-        dispatch(addToDislikes(movie?.id))
+        dispatch(addToDislikes({ showId: movie?.id }))
         if (liked){
           setLiked((prev)=>!prev)
-          dispatch(addToLikes(movie?.id))
+          dispatch(addToLikes({ showId: movie?.id }))
         }
       }
     }
@@ -65,7 +65,7 @@ const MovieCard = ({ movie, type, continueWatching }) => {
         .unwrap()
         .then((res)=>{
           e.preventDefault()
-          dispatch(addToNowWatching(movie?.id))
+          dispatch(addToNowWatching({ showId: movie?.id }))
           navigate(`/watch/${type}/${movie?.id}?tracking_id=${res?.id}`)
         })
         .catch((err)=>{console.error(err)})
@@ -75,14 +75,14 @@ const MovieCard = ({ movie, type, continueWatching }) => {
     const updateNowWatching = (e)=>{
       e.preventDefault()
       setNowWatching((prev)=>!prev)
-      dispatch(removeFromNowWatching(movie?.id))
+      dispatch(removeFromNowWatching({ showId: movie?.id }))
       updateNowWatchingApi({profileId: profile?.id, showId: movie?.id, type: type})
             .unwrap()
             .then((res)=>{
               console.log(res);
             })
             .catch((err)=>{
-              dispatch(addToNowWatching(movie?.id))
+              dispatch(addToNowWatching({ showId: movie?.id }))
               setNowWatching((prev)=>!prev)
               console.error(err)
             })
@@ -91,15 +91,14 @@ const MovieCard = ({ movie, type, continueWatching }) => {
     const updateMylist = (e)=>{
       e.preventDefault()
       setMyList((prev)=>!prev)
-      dispatch(addToMyList(movie?.id))
+      dispatch(addToMyList({ showId: movie?.id }))
       updateMyListApi({profileId: profile?.id, showId: movie?.id, type: type})
             .unwrap()
             .then((res)=>{
               console.log(res);
-              dispatch(addToMyList(movie?.id))
             })
             .catch((err)=>{
-              dispatch(addToMyList(movie?.id))
+              dispatch(addToMyList({ showId: movie?.id }))
               setMyList((prev)=>!prev)
               console.error(err)
             })

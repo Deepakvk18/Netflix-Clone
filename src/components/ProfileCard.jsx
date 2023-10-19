@@ -4,16 +4,48 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useDispatch } from 'react-redux'
 import { setCurrentProfile } from '../features/userSlice'
+import { setLikes, setNowWatching, setMyList, setDislikes } from '../features/userSlice'
+import { profileApi } from '../features/profileApi'
+import { useState } from 'react'
 
 const ProfileCard = ({ profile, manageProfiles, setEditProfile, setSelectedProfile }) => {
     const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const dispatch = useDispatch() 
+    const [clicked, setClicked] = useState(true)
+    const [fetchRatings, { data: ratingsResponse }] = profileApi.useLazyGetRatingsQuery()
+    const [fetchMyListIds, { data: myListResponse }] = profileApi.useLazyGetMyListIdsQuery()
+    const [fetchNowWatchingIds, { data: nowWatchingResponse }] = profileApi.useLazyGetNowWatchingIdsQuery(profile?.id, { skip: clicked })
 
-    const onProfileClick = (e)=>{
+    const onProfileClick = async (e)=>{
       e.preventDefault()
-      dispatch(setCurrentProfile({ profile }))
+      setClicked(false)
+      await dispatch(setCurrentProfile({ profile }))
+      await fetchRatings(profile?.id)
+        .unwrap()
+        .then(async(res)=>{
+          await dispatch(setLikes(res))
+        await dispatch(setDislikes(res))
+        })
+        .catch((err)=>{console.log(err)})
+      await fetchMyListIds(profile?.id)
+        .unwrap()
+        .then(async(res)=>{
+          await dispatch(setMyList(res))
+        })
+        .catch((err)=>{console.log(err)})
+      
+      await fetchNowWatchingIds(profile?.id)
+        .unwrap()
+        .then(async(res)=>{
+          await dispatch(setNowWatching(res))
+        })
+        .catch((err)=>{console.log(err)})
+      
+      console.log(myListResponse, nowWatchingResponse, ratingsResponse);
       navigate('/browse')
     }
+
+
 
     
 

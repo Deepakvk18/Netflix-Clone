@@ -130,7 +130,13 @@ export const profileApi = apiSlice.injectEndpoints({
             }),
             providesTags: ['NowWatching']
         }),
-
+        changeProfile: builder.mutation({
+            query: () => ({
+                url: `/profile/changeProfile`,
+                method: 'PUT',
+            }),
+            invalidatesTags: ['NowWatching', 'MyList', 'Ratings'],
+        })
     })
 })
 
@@ -150,4 +156,5 @@ export const { useAddProfileMutation,
                 useGetProfileRecommendationsQuery,
                 useSetCurrentEpisodeMutation,
                 useGetNowWatchingIdsQuery,
-                useGetMyListIdsQuery } = profileApi
+                useGetMyListIdsQuery,
+                useChangeProfileMutation } = profileApi

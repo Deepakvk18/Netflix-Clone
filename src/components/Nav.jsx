@@ -62,7 +62,7 @@ function Nav({ links, background, searchParams }) {
         <div className='flex relative inset-0 space-between items-center w-1/2'>
             <Link href="/browse">
                 <img
-                    className='hidden sm:flex object-contain cursor-pointer ml-10 mr-5'
+                    className='hidden sm:flex object-contain cursor-pointer ml-8 mr-5'
                     src={netflixLogo}
                     alt='logo'
                     width={150}
@@ -78,7 +78,7 @@ function Nav({ links, background, searchParams }) {
             </Link>
 
             { links &&
-                <div className='w-full hidden lg:flex ml-10 h-10 items-center'>
+                <div className='w-full hidden lg:flex lg:flex-nowrap ml-8 h-10 items-center'>
                     <div className={`justify-between  float-left`}>
                         <Link to='/browse' className='nav-links'>Home</Link>
                         <Link to='/discover/TV' className='nav-links'>TV Shows</Link>
@@ -126,12 +126,12 @@ function Nav({ links, background, searchParams }) {
             }
             </div>
              
-             <div className=' w-1/2 justify-right'>
+             <div className='justify-center'>
                 { links && 
                     <div className='w-full justify-center items-center right-0'>
                         { searchBar && 
                         <input
-                            className='absolute transition-all w-[300px] sm:w-[400px] top-28 right-40 ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 px-2 py-1 ring-slate-400 ring-2'
+                            className='absolute inset-0 m-auto transition-all w-[250px] sm:w-[300px] md:w-[400px] lg:w-[500px] top-24  ease-out delay-150 duration-1000 bg-[#333] text-white rounded-sm h-10 px-2 py-1 ring-slate-400 ring-2'
                             id='search-input'
                             value={searchParams ? searchParams : searchParam}
                             onChange={(e)=>setSearchParam(e.target.value)}
@@ -140,11 +140,11 @@ function Nav({ links, background, searchParams }) {
                             onKeyUp={onKeyUp}
                         />
                         }
-                        <div className={`absolute right-16 md:right-24 flex`}>
+                        <div className={`absolute right-16 top-10 items-center md:right-24 flex`}>
                             <FontAwesomeIcon 
                                 className='mr-4 cursor-pointer'
                                 icon={faMagnifyingGlass} 
-                                size='lg'
+                                size='xl'
                                 style={{color: "#fff",}} 
                                 onClick={showSearchBar}
                             />

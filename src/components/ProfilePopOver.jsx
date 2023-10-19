@@ -5,17 +5,18 @@ import {
   } from "@material-tailwind/react";
 import { getProfileImgUrl } from '../utils/profiles'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { selectCurrentProfile } from '../features/userSlice'
 import { useDispatch } from "react-redux";
-import { setCurrentProfile } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { selectProfiles } from "../features/userSlice";
 import { logout } from "../features/userSlice";
 import { useLogoutMutation } from "../features/authApi";
+import ProfilesPop from "./ProfilesPop";
+
    
   export function ProfilePopover({ setMigrateProfile }) {
     const [openPopover, setOpenPopover] = React.useState(false);
@@ -24,11 +25,9 @@ import { useLogoutMutation } from "../features/authApi";
     const navigate = useNavigate()
     const profiles = useSelector(selectProfiles)
     const [logoutApi] = useLogoutMutation()
+    
 
-    const onProfileClick = (profile)=>{
-      dispatch(setCurrentProfile({ profile }))
-      navigate('/browse')
-    }
+    
 
     const onLogout = (e)=>{
       e.preventDefault()
@@ -46,7 +45,7 @@ import { useLogoutMutation } from "../features/authApi";
     return (
       <Popover open={openPopover} handler={setOpenPopover}>
         <PopoverHandler {...triggers}>
-        <div className='fixed flex top-8 right-2 sm:right-10 group items-center cursor-pointer'>
+        <div className='fixed flex top-9 right-2 sm:right-10 group items-center cursor-pointer'>
                   <img
                       className='rounded-md cursor-pointer'
                       src={getProfileImgUrl(currentProfile)}
@@ -68,10 +67,7 @@ import { useLogoutMutation } from "../features/authApi";
               <Link to='/browse' className='cursor-pointer hover:underline'>Home</Link>
           </div>
           { profiles?.filter((profile)=>profile?.id !== currentProfile?.id).map((profile, index) => (
-              <div key={index} className='flex items-center' onClick={()=>onProfileClick(profile)}>
-                  <img width={35} className='my-1 mr-2 rounded-lg' src={getProfileImgUrl(profile)} alt="profile" /> 
-                  <p className='hover:underline cursor-pointer' onClick={()=>{}}>{profile.name}</p>
-          </div>
+             <ProfilesPop key={index} profile={profile}/>
           ))}
           <Link to='/manageProfiles' className='block cursor-pointer my-2 hover:underline'>Manage Profiles</Link>
           <Link to='/account' className='block cursor-pointer my-2 hover:underline'>Account</Link>

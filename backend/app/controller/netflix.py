@@ -144,29 +144,15 @@ def get_recommendations(likes):
         recommendations = return_api_response(url)
         if recommendations is None:
             continue
-        if recommendations.get('results') and len(recommendations.get('results')) > 10:    
-            results = random.choices(recommendations.get('results'), k=10)
-            res = []
-            for result in results:
+        if recommendations.get('results'):
+            for result in recommendations.get('results'):
                 result['type'] = show.type
                 if result.get('id') not in ids:
                     ids.add(result.get('id'))
-                    res.append(result)
-            shows.extend(res)
-        else:
-            results = recommendations.get('results')
-            if recommendations is None:
-                continue
-            res = []
-            for result in results:
-                result['type'] = show.type
-                if result.get('id') not in ids:
-                    ids.add(result.get('id'))
-                    res.append(result)
-            shows.extend(res) 
-    if len(shows) < 15:
-        return shows
-    return random.choices(shows, k=15)
+                    shows.append(result)
+                    if len(shows) >= 15:
+                        return shows
+    return shows
 
 def get_movie_details(show_id, type):
     url = f'{API_BASE_URL}/{type}/{show_id}?api_key={API_KEY}'

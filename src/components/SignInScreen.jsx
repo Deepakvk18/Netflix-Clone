@@ -43,7 +43,7 @@ function SignInScreen() {
             await loginMutation({ email, password })
                     .unwrap()
                     .then(async (payload)=> {
-                        console.log(payload);
+                        // console.log(payload);
                         await dispatch(login(payload))
                         navigate('/profiles')
                     })
