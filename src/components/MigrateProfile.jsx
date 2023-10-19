@@ -19,7 +19,7 @@ const MigrateProfile = ({ setMigrateProfile }) => {
     const [password, setPassword] = useState('')
     const [backendError, setBackendError] = useState('')
     const profiles = useSelector(selectProfiles)
-    const migrateProfile = useMigrateProfileMutation()
+    const [migrateProfile] = useMigrateProfileMutation()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
