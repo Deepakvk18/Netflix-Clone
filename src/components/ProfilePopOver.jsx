@@ -35,7 +35,7 @@ import { useLogoutMutation } from "../features/authApi";
       // console.log(logoutApi);
       logoutApi()
       dispatch(logout())
-      navigate('/login')
+      window.location.reload()
     }
    
     const triggers = {

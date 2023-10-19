@@ -37,7 +37,7 @@ export default function Banner({ nth }) {
         backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie?.backdrop_path})`,
         backgroundPosition: 'center'
     }}>
-        <div className="absolute h-[90vh] inset-0  w-[100vw] lg:w-[99.45vw] z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.8)] float-left" />  
+        <div className="absolute h-[90vh] inset-0  w-[100vw] lg:w-[99.3vw] z-10 bg-gradient-to-tr from-[rgba(0,0,0,0.8)] via-[rgba(0,0,0,0.6)] to-[rgba(0,0,0,0.8)] float-left" />  
         <div className='block z-30'>
           <div className='pt-44 mx-11 h-14 sm:w-[45%]'>
               <div className='mt-8'>
