@@ -50,6 +50,7 @@ class GetAllProfiles(Resource):
     def get(self):
         """Get All the profiles associated with the user"""
         user_id = firebase.get_user().get('localId')
+        print(user_id)
         user = User.query.filter_by(uuid=user_id).first()
         if not user:
             raise UserException(message='NO_USER_FOUND')

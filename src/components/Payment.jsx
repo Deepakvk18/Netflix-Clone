@@ -13,7 +13,7 @@ const Payment = () => {
             .unwrap()
             .then((res)=>{
                 console.log(res);
-                window.open(res.url, '_blank')
+                window.open(res.url)
             })
             .catch((error)=>{
                 console.error(error);
