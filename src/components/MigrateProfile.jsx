@@ -28,7 +28,7 @@ const MigrateProfile = ({ setMigrateProfile }) => {
         if(!isValidEmail(email) || !isValidPassword(password)) return
         // API Call
         console.log("Migrate Profile");
-        migrateProfile({ profile, email, password })
+        migrateProfile({ profileId: profile?.id, email, password })
             .unwrap()
             .then((originalPromiseResult)=>{
                 console.log("Profile Migrated", originalPromiseResult);

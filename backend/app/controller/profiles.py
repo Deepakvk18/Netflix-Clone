@@ -135,13 +135,14 @@ class MigrateProfile(Resource):
     @profile_api.marshal_with(message_output)
     @profile_api.expect(migrateprofile_input)
     @firebase.jwt_required
-    def put(self):
+    def post(self):
         """Migrate Profile from one user to another"""
         payload = profile_api.payload
         user = sign_in(payload.get('email'), payload.get('password'))
         if not user:
             raise UserException('USER_NOT_FOUND')
         profile = Profiles.query.filter_by(id=payload.get('profileId')).first()
+        print(profile, payload.get('profileId'))
         if not profile:
             raise ProfileException(message='PROFILE_NOT_FOUND')
         user = User.query.filter_by(uuid=payload.get('toUserId')).first()
