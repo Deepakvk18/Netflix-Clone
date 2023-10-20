@@ -39,21 +39,21 @@ class BaseConfig(object):
                 'class': 'logging.StreamHandler',
                 'formatter': 'simple'
             },
-            # 'log_info_file': {
-            #     'level': 'DEBUG',
-            #     'class': 'logging.handlers.RotatingFileHandler',
-            #     'filename': LOG_INFO_FILE,
-            #     'maxBytes': 16777216,  # 16megabytes
-            #     'formatter': 'standard',
-            #     'backupCount': 5
-            # },
+            'log_info_file': {
+                'level': 'DEBUG',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': LOG_INFO_FILE,
+                'maxBytes': 16777216,  # 16megabytes
+                'formatter': 'standard',
+                'backupCount': 5
+            },
         },
-        # 'loggers': {
-        #     APP_NAME: {
-        #         'level': 'DEBUG',
-        #         'handlers': ['log_info_file'],
-        #     },
-        # },
+        'loggers': {
+            APP_NAME: {
+                'level': 'DEBUG',
+                'handlers': ['log_info_file'],
+            },
+        },
     }
 
     CELERY_LOGGING = {
