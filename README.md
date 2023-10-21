@@ -87,8 +87,8 @@ python -m backend.run
 To create the required tables in MySQL, you can also use the following command:
 ```sql
 -- Create the database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS your_database_name;
-USE your_database_name;
+CREATE DATABASE IF NOT EXISTS netflix;
+USE netflix;
 
 -- Create the User table
 CREATE TABLE User (
