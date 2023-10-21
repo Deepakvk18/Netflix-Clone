@@ -22,6 +22,7 @@ A streaming platform where users can enjoy a variety of shows and movies while a
 - **Payment Integration**: Stripe API
 - **Show Details** - TMDB API
 - **Database**: MySQL
+- **Documentation**: Swagger UI
 
 ## Installation
 
@@ -83,7 +84,7 @@ python -m backend.run
 10. Login to the account, create new profile and use the application. 
 
 ## Database Design:-
-![Database Schema](https://github.com/Deepakvk18/Netflix-Clone/assets/103412614/58558b19-3321-4b13-8deb-5e817c693d72)
+![Database Schema](https://github.com/Deepakvk18/Netflix-Clone/assets/103412614/6e91d2c0-4784-4d06-bd94-e3201ffc7a77)
 
 To create the required tables in MySQL, you can also use the following command:
 ```sql
@@ -148,3 +149,8 @@ CREATE TABLE NowWatching (
     FOREIGN KEY (profile_id) REFERENCES Profiles(id)
 );
 ```
+## Backend Documentation
+![Netflix CLone API - Swagger Docs](https://github.com/Deepakvk18/Netflix-Clone/assets/103412614/f2003324-7e76-450a-9a8b-657d6129c941)
+
+## Frontend
+
