@@ -15,7 +15,7 @@ from .controller.auth import auth_api
 from .controller.users import user_api
 from .controller.profiles import profile_api
 from .controller.payments import payments_api
-from .extensions import (db)
+from .extensions import (db, migrate)
 from .exceptions.custom_exceptions import (NetflixException, AuthException)
 from .utils.messages import msg
 from . import constants
@@ -39,6 +39,7 @@ def create_app():
 
     
     db.init_app(app)
+    migrate.init_app(app, db)
 
     with app.app_context():
         db.create_all()
