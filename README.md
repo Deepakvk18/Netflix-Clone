@@ -18,6 +18,7 @@ A streaming platform where users can enjoy a variety of shows and movies while a
 - **Frontend**: React
 - **State Management** - Redux
 - **Backend**: Flask (Python)
+- **User Authentication**: JWT
 - **Payment Integration**: Stripe API
 - **Show Details** - TMDB API
 - **Database**: MySQL
