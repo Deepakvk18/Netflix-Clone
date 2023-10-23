@@ -15,8 +15,9 @@ A streaming platform where users can enjoy a variety of shows and movies while a
 
 ## Technologies Used
 
-- **Frontend**: React
-- **State Management** - Redux
+- **Frontend**: Vite (React)
+- **Styling**: Tailwind CSS
+- **State Management** - Redux, RTKQuery
 - **Backend**: Flask (Python)
 - **User Authentication**: JWT
 - **Payment Integration**: Stripe API
