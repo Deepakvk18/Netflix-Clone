@@ -16,13 +16,14 @@ export const userSlice = createSlice({
   },
   reducers: {
     login: (state, action)=>{
-      const { email, userId, idToken, plan, user } = action.payload
+      const { email, userId, idToken, plan, user, refreshToken } = action.payload
       state.email = email
       state.userId = userId
       state.user = user
       state.idToken = idToken
       state.plan = plan
       localStorage.setItem('userId', userId)
+      localStorage.setItem('refreshToken', refreshToken)
     },
     logout: (state)=>{
       state = undefined

@@ -12,8 +12,8 @@ const Payment = () => {
         await checkoutMutation({ priceId })
             .unwrap()
             .then((res)=>{
-                console.log(res);
-                window.open(res.url)
+                // console.log(res);
+                window.location.replace(res?.url)
             })
             .catch((error)=>{
                 console.error(error);

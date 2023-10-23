@@ -7,7 +7,7 @@ from ..services.authentication import firebase
 from .. import constants
 from . import payments_api
 from ..exceptions.custom_exceptions import PaymentException
-from ..schemas.payment_schema import upgradeplan_input
+from ..schemas.payment_schema import upgradeplan_input, checkout_output, createsession_input
 from ..models.user_models import User
 from ..extensions import db
 
@@ -18,8 +18,9 @@ stripe.publishable_key = os.getenv('STRIPE_PUBLISHABLE_KEY')
 @payments_api.route('/create-checkout-session')
 class Checkout(Resource):
 
-    @payments_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    @payments_api.doc(responses={201: 'Created', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     @payments_api.doc(security="jsonWebToken")
+    @payments_api.expect(createsession_input, validate=True)
     @firebase.jwt_required
     def post(self):
         """Create a Checkout session for a user and a plan"""
@@ -42,12 +43,12 @@ class Checkout(Resource):
             cancel_url=f'{constants.FRONTEND}/checkout?canceled=true',
         )
 
-        return {'url': checkout_session.url, 'code':303}
+        return {'url': checkout_session.url, 'code':303}, 201
 
 @payments_api.route('/cancelSubscription')
 class CancelSubscription(Resource):
 
-    @payments_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    @payments_api.doc(responses={204: 'No Content', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     @payments_api.doc(security="jsonWebToken")
     @firebase.jwt_required
     def delete(self):
@@ -63,7 +64,7 @@ class CancelSubscription(Resource):
             user = User.query.filter_by(email=email).first()
             user.plan = 2
             db.session.commit()
-            return subs
+            return {}, 204
 
 
 @payments_api.route('/changeSubscription/<price_id>')
@@ -89,6 +90,8 @@ class ChangeSubscription(Resource):
 
 @payments_api.route('/products')
 class Products(Resource):
+
+    @payments_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
     def get(self):
         """Get all the products available in stripe"""
         return stripe.Product.list()

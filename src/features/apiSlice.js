@@ -1,8 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { backend } from '../utils/baseUrl';
-import { store } from '../app/store';
 import { logout, login } from './userSlice';
-import { FRONTEND_URL } from '../utils/baseUrl';
+import axios from 'axios';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: backend,
@@ -13,6 +12,8 @@ const baseQuery = fetchBaseQuery({
         if (idToken) {
             headers.set("Authorization", `Bearer ${idToken}`)
         }
+        headers.set('Access-Control-Allow-Origin', '*')
+        headers.set('Content-Type', 'application/json')
         return headers
     }
 })
@@ -25,18 +26,31 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     if (result?.error?.status === 403) {
         console.log('sending refresh token')
         // send refresh token to get new access token 
-        const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
-        console.log(refreshResult)
-        if (refreshResult?.data) {
-            const idToken = api.getState().user.idToken
-            console.log(idToken)
-            // store the new token 
-            api.dispatch(login({ ...refreshResult.data, idToken }))
-            // retry the original query with new access token 
-            result = await baseQuery(args, api, extraOptions)
-        } else {
+        try{
+            const refreshResult = await axios.post(`${backend}/auth/refresh`, 
+                { 
+                    refreshToken: localStorage.getItem('refreshToken') }, 
+                    { 
+                        withCredentials: true,
+                        credentials: 'include',
+                        mode: 'cors',
+                        headers: {
+                            'Access-Control-Allow-Origin': '*',
+                            'Content-Type': 'application/json'
+                        } 
+                    })
+                // console.log(refreshResult)
+                // const idToken = api.getState().user.idToken
+                // console.log(idToken)
+                // store the new token 
+                api.dispatch(login( refreshResult?.data ))
+                // retry the original query with new access token 
+                result = await baseQuery(args, api, extraOptions)
+        } catch (err) {
+            console.log(err)
             api.dispatch(logout())
         }
+
     }
 
     return result

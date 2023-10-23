@@ -20,6 +20,10 @@ validate_output = auth_api.model('Validate Token Output', model={
     'localId': fields.String(description='User UID', required=True)
 })
 
+refresh_input = auth_api.model('Refresh Token Input', model={
+    'refreshToken': fields.String(description='Refresh Token of the user', required=True)
+})
+
 refresh_output = auth_api.model('Validate Token Output', model={
     'email': fields.String(description='Email ID of the respective user', required=True),
     "idToken": fields.String(description="Token ID of the user", required=True),

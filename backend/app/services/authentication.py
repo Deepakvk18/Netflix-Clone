@@ -30,8 +30,9 @@ class FireBaseAuth:
     def validate(self, token):
         return self.auth.get_account_info(token)
 
-    def refresh(self):
-        return self.auth.refresh(refresh_token=self.get_refresh_token())
+    def refresh(self, token):
+        print(token)
+        return self.auth.refresh(refresh_token=token)
 
     def signup(self, email, password):
         return self.auth.create_user_with_email_and_password(email, password)
@@ -70,8 +71,6 @@ class FireBaseAuth:
     @staticmethod
     def get_refresh_token():
         refresh = request.cookies.get('refresh_token')
-        print(request.headers)
-        print(request.cookies)
         if not refresh:
             raise AuthException(message='NO_REFRESH_TOKEN_FOUND')
         return refresh

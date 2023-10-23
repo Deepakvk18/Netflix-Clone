@@ -16,9 +16,11 @@ export const authApi = apiSlice.injectEndpoints({
                 method: 'DELETE'
             }),
         }),
-        refresh: builder.query({
-            query: ()=> ({ 
-                url: '/auth/refresh'
+        refresh: builder.mutation({
+            query: (body)=> ({ 
+                url: '/auth/refresh',
+                method: 'POST',
+                body: body
             })
         }),
         verifyIdentity: builder.query({
@@ -37,5 +39,5 @@ export const authApi = apiSlice.injectEndpoints({
 export const { useLoginMutation, 
                 useLogoutMutation, 
                 useSignUpMutation, 
-                useRefreshQuery, 
+                useRefreshMutation, 
                 useVerifyIdentityQuery } = authApi

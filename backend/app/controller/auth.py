@@ -12,7 +12,8 @@ from ..schemas.auth_schema import (sign_in_model,
                                 sign_in_output,
                                 validate_output,
                                 refresh_output,
-                                message_output)
+                                message_output,
+                                refresh_input)
 from ..models.user_models import User
 from .users import get_plan
 from ..models.profile_models import Profiles
@@ -70,23 +71,24 @@ class Identity(Resource):
 class Refresh(Resource):
     
     @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
-    @auth_api.doc(security='jsonWebToken')
+    @auth_api.expect(refresh_input)
     # @auth_api.marshal_with(refresh_output)
-    def get(self):
+    def post(self):
         """Get the new access token of the user given a refresh token"""
-        new_info = firebase.refresh()
-        response = make_response({'email': new_info.get('email'), 'idToken': new_info.get('idToken'), 'localId': new_info.get('localId'), 'refreshToken': new_info.get('refreshToken')})
+        new_info = firebase.refresh(auth_api.payload.get('refreshToken'))
+        user_id = new_info.get('userId')
+        user = User.query.filter_by(uuid=user_id).first()
+        response = make_response({ 'email': user.email, 'userId': new_info.get('localId'), 'idToken': new_info.get('idToken'), 'plan': user.plans.to_dict(), 'user': user.to_dict(), 'refreshToken': new_info.get('refreshToken') })
         response.set_cookie('refresh_token', value=new_info.get('refreshToken'), domain=constants.FRONTEND, httponly=True, max_age=2560000, secure=True, samesite=None)
         return response
 
 @auth_api.route('/logout')
 class Logout(Resource):
 
-    @auth_api.doc(responses={200: 'Success', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
+    @auth_api.doc(responses={204: 'No Content', 400: 'Bad Request', 403: 'Unauthorized', 500: 'Server Error'}, )
     # @auth_api.marshal_with(message_output)
     def delete(self):
         """Destroys Refresh token & Acces token from cookies once the user is logged out"""
-        # Destroy both the refresh token and accesss token once the user is logged out
         response = make_response(jsonify({'message': 'User Logged out Successfully'}))
         response.set_cookie('access_token', '', expires=0, httponly=True)
         response.set_cookie('refresh_token', '', expires=0, httponly=True)
@@ -113,7 +115,7 @@ def sign_in(email, password):
     refresh = signed_in.get('refreshToken')
     id_token = signed_in.get('idToken')
     refresh = signed_in.get('refreshToken')
-    signed_in = make_response({ 'email': signed_in.get('email'), 'userId': signed_in.get('localId'), 'idToken': signed_in.get('idToken'), 'plan': plan.to_dict(), 'user': user.to_dict() })
+    signed_in = make_response({ 'email': user.email, 'userId': signed_in.get('localId'), 'idToken': id_token, 'plan': plan.to_dict(), 'user': user.to_dict(), 'refreshToken': refresh })
     signed_in.set_cookie('refresh_token', domain=constants.FRONTEND, value=refresh, httponly=True, max_age=2560000, samesite=None, secure=True)
     
     return signed_in

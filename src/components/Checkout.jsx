@@ -14,7 +14,7 @@ export function Checkout() {
       if (query.get('success')) {
       setMessage("Order placed! You will receive an email confirmation. You will be redirected to the login page shortly.")
       const priceId= query.get('plan')
-      subscribeMutation({ priceId })
+      subscribeMutation(priceId)
         .unwrap()
         .then((res)=>{
           console.log(res);

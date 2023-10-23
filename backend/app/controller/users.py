@@ -36,7 +36,7 @@ class SignUpEmail(Resource):
 @user_api.route('/delete')
 class DeleteUser(Resource):
 
-    @user_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error'})
+    @user_api.doc(responses={204: 'No Content', 400: 'Bad Request', 500: 'Server Error'})
     @user_api.marshal_with(signup_output)
     @user_api.doc(security="jsonWebToken")
     @firebase.jwt_required
@@ -54,7 +54,7 @@ class DeleteUser(Resource):
             db.session.commit()
         return {'message': 'User Deleted Successfully!!'}
 
-@user_api.route('/subscribe/<int:plan_id>')
+@user_api.route('/subscribe/<plan_id>')
 class ChangePlan(Resource):
 
     @user_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
