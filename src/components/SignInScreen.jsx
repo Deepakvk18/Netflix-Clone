@@ -46,8 +46,8 @@ function SignInScreen() {
                         // console.log(payload);
                         await dispatch(login(payload))
                         console.log(payload)
-                        if (payload.plan.price === 0) navigate('/signUp/plans')
-                        else navigate('/profiles')
+                        // if (payload.plan.price === 0) navigate('/signUp/plans')
+                        navigate('/profiles')
                     })
                     .catch((error)=>{
                         console.error(error);

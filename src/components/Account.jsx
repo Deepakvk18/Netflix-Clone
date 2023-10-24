@@ -21,8 +21,8 @@ export const Account = () => {
     email: email,
     password: 'deepak',
     card: '****-****-****-4242',
-    plan: plan.plan,
-    userSince: new Date(user.subscribed_at).toLocaleString('default', { month: 'long' }) + ' ' + new Date(user.subscribed_at).getFullYear(),
+    plan: plan?.plan,
+    userSince: new Date(user?.subscribed_at).toLocaleString('default', { month: 'long' }) + ' ' + new Date(user?.subscribed_at).getFullYear(),
     profiles: profiles
   }
   const [openEdit, setOpenEdit] = useState(false)
@@ -104,7 +104,7 @@ export const Account = () => {
                       </div>
                   </div>
                   <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                    { account.profiles.map((profile) => (
+                    { account?.profiles?.map((profile) => (
                       <ProfileAccordion 
                         key={profile.id}
                         profile={profile} 

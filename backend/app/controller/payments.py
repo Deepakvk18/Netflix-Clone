@@ -96,6 +96,14 @@ class Products(Resource):
         """Get all the products available in stripe"""
         return stripe.Product.list()
 
+@payments_api.route('/price/<price_id>')
+class Products(Resource):
+
+    @payments_api.doc(responses={200: 'Success', 400: 'Bad Request', 500: 'Server Error', 403: 'Forbidden'})
+    def get(self, price_id):
+        """Get all the products available in stripe"""
+        return stripe.Price.retrieve(price_id)
+
 def delete_customer(email):
     """Delete the customer from stripe"""
     cust = stripe.Customer.list(email=email).get('data')

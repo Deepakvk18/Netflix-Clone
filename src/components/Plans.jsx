@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { useGetProductsQuery } from "../features/paymentsApi"
 import PlanCard from "./PlanCard"
 import { useNavigate } from "react-router-dom"
+import { useGetPlansQuery } from "../features/userApi"
 
 const Plans = () => {
 
@@ -37,6 +38,7 @@ export const PlanTable = ({ currentSubscription, subscriptionChange }) => {
 
     const submit = (e) => {
         e.preventDefault()
+        if (!currentPlan) return
         navigate(`/signUp/payment?plan=${currentPlan}`)
     }
     

@@ -4,7 +4,7 @@ export const paymentsApi = apiSlice.injectEndpoints({
 
     endpoints: (builder) => ({
         getProducts: builder.query({
-            query: () => ('/payments/products')
+            query: () => ('/payments/products'),
         }),
         checkOut: builder.mutation({
             query: (body) => ({
@@ -22,7 +22,12 @@ export const paymentsApi = apiSlice.injectEndpoints({
                 url: '/payments/cancelSubscription', 
                 method: 'DELETE'})
         }),
+        getPrice: builder.query({
+            query: (priceId) => ({
+                url: `/payments/price/${priceId}`
+            })
+        })
     })
 })
 
-export const { useGetProductsQuery, useCheckOutMutation, useChangeSubscriptionMutation, useCancelSubscriptionMutation } = paymentsApi
+export const { useGetProductsQuery, useCheckOutMutation, useChangeSubscriptionMutation, useCancelSubscriptionMutation, useGetPriceQuery } = paymentsApi

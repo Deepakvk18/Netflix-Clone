@@ -25,11 +25,18 @@ export const userApi = apiSlice.injectEndpoints({
                 url: `/users/subscribe/${plan}`,
                 method: 'PUT'
             })
-        })
+        }),
+        getPlans: builder.query({
+            query: () => ({
+                url: '/users/plans'
+            })
+        }),
+        
     })
 })
 
 export const { useSignUpEmailMutation,
-                useDeleteUserQuery,
+                useDeleteUserMutation,
                 usePlansQuery,
-                useSubscribeMutation } = userApi
+                useSubscribeMutation,
+                useGetPlansQuery} = userApi

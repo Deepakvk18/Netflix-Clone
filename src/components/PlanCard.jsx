@@ -1,9 +1,13 @@
 import { useEffect } from "react"
 import { useState  } from "react"
+import { useGetPriceQuery } from "../features/paymentsApi"
 
 const PlanCard = ({ data, changePlan, currentPlan, currentSubscription }) => {
 
     const [active, setActive] = useState(false)
+    const { data:price, isLoading, isError, error } = useGetPriceQuery(data?.default_price)
+
+    // console.log(price);
 
     const handleClick = () => {
         changePlan(data.default_price)
@@ -26,7 +30,7 @@ const PlanCard = ({ data, changePlan, currentPlan, currentSubscription }) => {
                         {data?.name} <span className="text-sm">{ currentSubscription === data.default_price && '(Current)'}</span>
                     </h2>
                     <h3 className="text-2xl">
-                    ₹ {'199'} /Month
+                    ₹ {price?.unit_amount / 100} /Month
                     </h3>
                 
             </div>

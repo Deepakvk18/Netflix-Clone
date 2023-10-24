@@ -1,8 +1,6 @@
 import netflixLogo from './assets/images/Netflix-Brand-Logo.png'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { useNavigate } from 'react-router-dom'
-import { selectEmail } from '../features/userSlice'
-import { useSelector } from 'react-redux/es/hooks/useSelector'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../features/userSlice'
 import { useLogoutMutation } from '../features/authApi'
@@ -10,9 +8,10 @@ import { useLogoutMutation } from '../features/authApi'
 const NavSignUp = () => {
 
     const navigate = useNavigate()
-    const email = useSelector(selectEmail);
+    const auth = localStorage.getItem('refreshToken')
     const dispatch = useDispatch()
     const [logoutApi] = useLogoutMutation()
+    
 
     const handleLogout = (e) => {
         e.preventDefault()
@@ -29,14 +28,14 @@ const NavSignUp = () => {
             onClick={()=>navigate('/')}
             width={180}
         />
-        {email ? (
-            <a onClick={handleLogout} className='text-2xl font-bold ml-auto mr-20'>
+        {auth ? (
+            <p onClick={handleLogout} className='text-2xl cursor-pointer font-bold ml-auto mr-20'>
                 Sign out
-            </a>
+            </p>
         ) : (
-            <a href='/login' className='text-2xl font-bold ml-auto mr-20'>
+            <Link to='/login' className='text-2xl font-bold ml-auto cursor-pointer mr-20'>
                 Sign In
-            </a>
+            </Link>
         )}
     </nav>
   )
