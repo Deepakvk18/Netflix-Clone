@@ -150,6 +150,7 @@ CREATE TABLE NowWatching (
     FOREIGN KEY (profile_id) REFERENCES Profiles(id)
 );
 ```
+
 ## Backend Documentation
 ![Netflix CLone API - Swagger Docs](https://github.com/Deepakvk18/Netflix-Clone/assets/103412614/f2003324-7e76-450a-9a8b-657d6129c941)
 
