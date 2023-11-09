@@ -149,6 +149,14 @@ CREATE TABLE NowWatching (
     episode INT,
     FOREIGN KEY (profile_id) REFERENCES Profiles(id)
 );
+
+INSERT INTO plans (id, plan, price, description) VALUES (1, 'Signed Up', 0, 'User Just Signed Up');
+INSERT INTO plans (id, plan, price, description) VALUES (2, 'Deleted', 0, 'User Deleted Account');
+INSERT INTO plans (id, plan, price, description) VALUES (3, 'Mobile', 149, 'Mobile 480p');
+INSERT INTO plans (id, plan, price, description) VALUES (4, 'Basic', 199, '1 device 720p');
+INSERT INTO plans (id, plan, price, description) VALUES (5, 'Standard', 499, '2 devices 1080p');
+INSERT INTO plans (id, plan, price, description) VALUES (6, 'Premium', 649, '4 devices 4K');
+
 ```
 
 ## Backend Documentation
